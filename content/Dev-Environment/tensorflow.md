@@ -1,7 +1,7 @@
 ---
-title: tf配置
+title: TensorFlow环境搭建
 layout: page
-date: 2016-06-01 23:29
+date: 2016-06-02 22:46
 ---
 
 本博客主要用于在Ubuntu14.04 64bit 操作系统上搭建google开源的深度学习框架tensorflow。
