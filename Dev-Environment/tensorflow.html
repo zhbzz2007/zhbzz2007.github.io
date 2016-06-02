@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>tf配置 - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Dev-Environment">Dev-Environment</a>&nbsp;»&nbsp;tf配置</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">tf配置</div>
+  <div id="content">
+  <p>本博客主要用于在Ubuntu14.04 64bit 操作系统上搭建google开源的深度学习框架tensorflow。</p>
+<h2 id="0cudacudnn">0.安装CUDA和cuDNN</h2>
+<p>如果要安装GPU版本的tensorflow，就必须先安装CUDA和cuDNN，请参考<a href="http://www.cnblogs.com/zhbzz2007/p/5499180.html">Caffe学习笔记2--Ubuntu 14.04 64bit 安装Caffe（GPU版本）</a>。</p>
+<h2 id="1tensorflow">1.安装tensorflow</h2>
+<p>github上下载已经编译好的.whl文件。</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201605/668850-20160528220012022-1342690038.png" /></p>
+<p>输入如下，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">tensorflow</span><span class="o">-</span><span class="mf">0.8.0</span><span class="o">-</span><span class="n">cp27</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">linux_x86_64</span><span class="p">.</span><span class="n">whl</span>
+</pre></div>
+
+
+<p>即可自动安装。</p>
+<p>安装完成后，进入python，输入，</p>
+<div class="hlcode"><pre><span class="n">import</span> <span class="n">tensorflow</span>
+</pre></div>
+
+
+<p>显示如下，表明GPU版本的tensorflow安装成功，版本微0.8.0。</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201605/668850-20160528220441006-1023444395.png" /></p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
