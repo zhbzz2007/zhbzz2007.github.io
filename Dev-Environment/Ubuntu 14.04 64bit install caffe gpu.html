@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>Caffe学习笔记2--Ubuntu 14.04 64bit 安装Caffe（GPU版本） - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Dev-Environment">Dev-Environment</a>&nbsp;»&nbsp;Caffe学习笔记2--Ubuntu 14.04 64bit 安装Caffe（GPU版本）</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">Caffe学习笔记2--Ubuntu 14.04 64bit 安装Caffe（GPU版本）</div>
+  <div id="content">
+  <h2 id="0">0.检查配置</h2>
+<p><strong>1.</strong>VMWare上运行的Ubuntu，并不能支持真实的GPU（除了特定版本的VMWare和特定的GPU，要求条件严格，所以我在VMWare上搭建好了Caffe环境后，又重新在Windows 7 64bit系统上安装了Ubuntu 14.04 64bit系统，链接<a href="http://www.cnblogs.com/zhbzz2007/p/5493395.html">在此</a>，以此来搭建Caffe GPU版本）；</p>
+<p><strong>2.</strong>确定GPU支持CUDA</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">lspci</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">i</span> <span class="n">nvidia</span>
+</pre></div>
+
+
+<p>显示结果：</p>
+<p>我的是GTX 650，然后到<a href="http://developer.nvidia.com/cuda-gpus">CUDA GPUs</a>去验证，支持CUDA；</p>
+<p><img alt="" src="http://i.imgur.com/jdsEp5g.png" /></p>
+<p><strong>3.</strong>确定Linux版本支持CUDA</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">uname</span> <span class="o">-</span><span class="n">m</span> <span class="o">&amp;&amp;</span> <span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/*</span><span class="n">release</span>
+</pre></div>
+
+
+<p>结果显示：</p>
+<p><img alt="" src="http://i.imgur.com/l8caf7X.png" /></p>
+<p><strong>4.</strong>确定系统已经安装了GCC</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">gcc</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+
+
+<p>结果显示：</p>
+<p><img alt="" src="http://i.imgur.com/INqTjG2.png" /></p>
+<p><strong>5.</strong>确定系统已经安装了正确的Kernel Headers和开发包</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">uname</span> <span class="o">-</span><span class="n">r</span>
+</pre></div>
+
+
+<p>结果：4.2.0-35-generic，这个是必须安装的kernel headers和开发包的版本；</p>
+<p>安装对应的kernels header和开发包，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">linux</span><span class="o">-</span><span class="n">headers</span><span class="o">-</span><span class="err">$</span><span class="p">(</span><span class="n">uname</span> <span class="o">-</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+
+
+<h2 id="1install-cuda">1.Install CUDA</h2>
+<p>下载CUDA，从https://developer.nvidia.com/cuda-downloads，下载对应版本的cuda安装包，我下载的是deb（local）版，</p>
+<p><img alt="" src="http://i.imgur.com/x5ESO9S.png" /></p>
+<p>安装CUDA，运行如下命令，即可安装CUDA；</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="n">cuda</span><span class="o">-</span><span class="n">repo</span><span class="o">-</span><span class="n">ubuntu1404_7</span><span class="mf">.5</span><span class="o">-</span><span class="mi">18</span><span class="n">_amd64</span><span class="p">.</span><span class="n">deb</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">cuda</span>
+</pre></div>
+
+
+<p>安装完成后，重启一下；</p>
+<h2 id="2cudnn">2.安装cuDNN</h2>
+<p>下载cuDNN，从https://developer.nvidia.com/rdp/cudnn-download，注册，然后下载，</p>
+<p><img alt="" src="http://i.imgur.com/9mNyhaC.png" /></p>
+<p>注意事项：
+有可能由于最新cuDNN不稳定，导致后续caffe工程编译失败，报出如下错误，详情参考第三个链接，这时可以回退一下，下载较新版本的cuDNN；</p>
+<div class="hlcode"><pre><span class="nx">CXX</span> <span class="nx">src</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">test_im2col_layer</span><span class="p">.</span><span class="nx">cpp</span>
+<span class="nx">In</span> <span class="nx">file</span> <span class="nx">included</span> <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">util</span><span class="o">/</span><span class="nx">device_alternate</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">40</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">common</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">19</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">blob</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">8</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="nx">src</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">test_im2col_layer</span><span class="p">.</span><span class="nx">cpp</span><span class="o">:</span><span class="mi">5</span><span class="o">:</span>
+<span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">util</span><span class="o">/</span><span class="nx">cudnn</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span> <span class="nx">In</span> <span class="kd">function</span> <span class="err">‘</span><span class="k">void</span> <span class="nx">caffe</span><span class="o">::</span><span class="nx">cudnn</span><span class="o">::</span><span class="nx">createPoolingDesc</span><span class="p">(</span><span class="nx">cudnnPoolingStruct</span><span class="o">**</span><span class="p">,</span> <span class="nx">caffe</span><span class="o">::</span><span class="nx">PoolingParameter_PoolMethod</span><span class="p">,</span> <span class="nx">cudnnPoolingMode_t</span><span class="o">*</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">)</span><span class="err">’</span><span class="o">:</span>
+<span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">util</span><span class="o">/</span><span class="nx">cudnn</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">127</span><span class="o">:</span><span class="mi">41</span><span class="o">:</span> <span class="nx">error</span><span class="o">:</span> <span class="nx">too</span> <span class="nx">few</span> <span class="nx">arguments</span> <span class="nx">to</span> <span class="kd">function</span> <span class="err">‘</span><span class="nx">cudnnStatus_t</span> <span class="nx">cudnnSetPooling2dDescriptor</span><span class="p">(</span><span class="nx">cudnnPoolingDescriptor_t</span><span class="p">,</span> <span class="nx">cudnnPoolingMode_t</span><span class="p">,</span> <span class="nx">cudnnNanPropagation_t</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">,</span> <span class="kr">int</span><span class="p">)</span><span class="err">’</span>
+         <span class="nx">pad_h</span><span class="p">,</span> <span class="nx">pad_w</span><span class="p">,</span> <span class="nx">stride_h</span><span class="p">,</span> <span class="nx">stride_w</span><span class="p">));</span>
+                                         <span class="o">^</span>
+<span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">util</span><span class="o">/</span><span class="nx">cudnn</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">15</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span> <span class="nx">note</span><span class="o">:</span> <span class="k">in</span> <span class="nx">definition</span> <span class="nx">of</span> <span class="nx">macro</span> <span class="err">‘</span><span class="nx">CUDNN_CHECK</span><span class="err">’</span>
+     <span class="nx">cudnnStatus_t</span> <span class="nx">status</span> <span class="o">=</span> <span class="nx">condition</span><span class="p">;</span> <span class="o">\</span>
+                            <span class="o">^</span>
+<span class="nx">In</span> <span class="nx">file</span> <span class="nx">included</span> <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">util</span><span class="o">/</span><span class="nx">cudnn</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">5</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">util</span><span class="o">/</span><span class="nx">device_alternate</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">40</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">common</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">19</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="p">.</span><span class="o">/</span><span class="nx">include</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">blob</span><span class="p">.</span><span class="nx">hpp</span><span class="o">:</span><span class="mi">8</span><span class="p">,</span>
+                 <span class="nx">from</span> <span class="nx">src</span><span class="o">/</span><span class="nx">caffe</span><span class="o">/</span><span class="nx">test</span><span class="o">/</span><span class="nx">test_im2col_layer</span><span class="p">.</span><span class="nx">cpp</span><span class="o">:</span><span class="mi">5</span><span class="o">:</span>
+<span class="err">/usr/local/cuda/include/cudnn.h:799:27: note: declared here</span>
+ <span class="nx">cudnnStatus_t</span> <span class="nx">CUDNNWINAPI</span> <span class="nx">cudnnSetPooling2dDescriptor</span><span class="p">(</span>
+                           <span class="o">^</span>
+<span class="nx">Makefile</span><span class="o">:</span><span class="mi">572</span><span class="o">:</span> <span class="nx">recipe</span> <span class="k">for</span> <span class="nx">target</span> <span class="s1">&#39;.build_release/src/caffe/test/test_im2col_layer.o&#39;</span> <span class="nx">failed</span>
+<span class="nx">make</span><span class="o">:</span> <span class="o">***</span> <span class="cp">[</span><span class="bp">.</span><span class="nx">build_release</span><span class="p">/</span><span class="nb">src</span><span class="p">/</span><span class="nx">caffe</span><span class="p">/</span><span class="nx">test</span><span class="p">/</span><span class="nx">test_im2col_layer.o</span><span class="cp">]</span> <span class="nb">Error</span> <span class="mi">1</span>
+</pre></div>
+
+
+<p>拷贝cuDNN库文件到cuda目录下，</p>
+<div class="hlcode"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">cudnn</span><span class="o">-</span><span class="mf">7.0</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">-</span><span class="n">v4</span><span class="mf">.0</span><span class="o">-</span><span class="n">prod</span><span class="p">.</span><span class="n">tgz</span>
+<span class="n">cd</span> <span class="n">cuda</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="n">lib64</span><span class="o">/*</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">lib64</span><span class="o">/</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="n">include</span><span class="o">/</span><span class="n">cudnn</span><span class="p">.</span><span class="n">h</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">include</span><span class="o">/</span>
+</pre></div>
+
+
+<p>设置环境变量，在/etc/profile中添加CUDA环境变量，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">gedit</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">profile</span> <span class="err">#在打开的文件中加入如下两句话</span>
+
+<span class="n">export</span> <span class="n">PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">bin</span><span class="o">:</span><span class="err">$</span><span class="n">PATH</span>
+<span class="n">export</span> <span class="n">LD_LIBRARY_PATH</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">cuda</span><span class="o">/</span><span class="n">lib64</span><span class="o">:</span><span class="err">$</span><span class="n">LD_LIBRARY_PATH</span>
+</pre></div>
+
+
+<p>保存后，使环境变量立即生效，</p>
+<div class="hlcode"><pre><span class="n">source</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">profile</span>
+</pre></div>
+
+
+<p>进入/usr/local/cuda/samples，执行下面的命令来build samples，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">make</span> <span class="n">all</span> <span class="o">-</span><span class="n">j4</span>
+</pre></div>
+
+
+<p>全部编译完成后，进入 samples/bin/x86_64/linux/release，运行deviceQuery，</p>
+<div class="hlcode"><pre><span class="p">.</span><span class="o">/</span><span class="n">deviceQuery</span>
+</pre></div>
+
+
+<p>如果出现显卡信息，则驱动及显卡安装成功，结果如下：</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201605/668850-20160515201137430-749988136.png" /></p>
+<h2 id="3caffe">3.编译caffe</h2>
+<p>修改caffe/Makefile.config，</p>
+<div class="hlcode"><pre><span class="cp"># cuDNN acceleration switch (uncomment to build with cuDNN).</span>
+<span class="n">USE_CUDNN</span> <span class="o">:=</span> <span class="mi">1</span><span class="err">#去掉这个注释</span>
+
+<span class="cp"># CPU-only switch (uncomment to build without GPU support).</span>
+<span class="cp"># CPU_ONLY := 1#加上这个注释</span>
+</pre></div>
+
+
+<p>然后输入，</p>
+<div class="hlcode"><pre><span class="n">make</span> <span class="n">clean</span><span class="err">#第一次编译，不需要执行</span>
+<span class="n">make</span> <span class="n">all</span>
+<span class="n">make</span> <span class="n">test</span>
+<span class="n">make</span> <span class="n">runtest</span>
+</pre></div>
+
+
+<p>显示结果：</p>
+<p>编译pycaffe，</p>
+<div class="hlcode"><pre><span class="n">make</span> <span class="n">pycaffe</span>
+</pre></div>
+
+
+<h2 id="4mnist">4.mnist数据测试</h2>
+<div class="hlcode"><pre><span class="n">cd</span> <span class="n">caffe</span>
+
+<span class="cp"># 下载mnist数据</span>
+<span class="n">sh</span> <span class="n">data</span><span class="o">/</span><span class="n">mnist</span><span class="o">/</span><span class="n">get_mnist</span><span class="p">.</span><span class="n">sh</span>
+
+<span class="n">sh</span> <span class="n">examples</span><span class="o">/</span><span class="n">mnist</span><span class="o">/</span><span class="n">create_mnist</span><span class="p">.</span><span class="n">sh</span>
+
+<span class="p">.</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">mnist</span><span class="o">/</span><span class="n">train_lenet</span><span class="p">.</span><span class="n">sh</span>
+</pre></div>
+
+
+<p>执行结果，</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201605/668850-20160515202055195-1470988466.png" /></p>
+<p>和CPU版本<a href="http://www.cnblogs.com/zhbzz2007/p/5479181.html">Caffe学习笔记1--Ubuntu 14.04 64bit caffe安装</a>的mnist数据测试相比，速度明显提升；当时我运行脚本后，就开始看书，刚看完一页，抬头发现已经运行完毕，第一次用GPU计算，虽然只是很渣的GTX 650，但依然对GPU的运算能力感到佩服；</p>
+<h2 id="5">5.深度学习开源库环境搭建大礼包</h2>
+<p>昨晚群里一个哥们分享了一个github链接，涵盖了主流深度学习开源库的环境搭建，包括Nvidia驱动、CUDA、cuDNN、TensorFlow、Caffe、Theano、Keras、Torch，链接<a href="https://github.com/saiprashanths/dl-setup">在此</a>，他的配置是Ubuntu 14.04 64bit + Nvidia Titan X，还是适用于好多朋友的机器的，所以好东西还是要分享给大家；</p>
+<p>这条消息对我而言既是好消息，又是坏消息，好消息就是这个大礼包真的很棒，坏消息就是我把环境搭建好之后，才知道这个消息。不过，在搭建环境的过程中，自己踩过一些坑，也算是一个熟悉Linux的过程吧，环境搭建好了，还是很开心的；</p>
+<h2 id="6">6.参考链接</h2>
+<p><a href="http://www.cnblogs.com/wm123/p/5385940.html">Ubuntu 14.04上安装caffe</a></p>
+<p><a href="http://blog.csdn.net/u013915633/article/details/49867947">Ubuntu 14.04 + Caffe + Cuda 7.5 + Opencv 3.0安装教程</a></p>
+<p><a href="http://stackoverflow.com/questions/36637923/caffe-error-make-test">Caffe error make test</a></p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
