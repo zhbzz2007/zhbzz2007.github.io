@@ -18,6 +18,10 @@ http://www.jb51.net/article/51609.htm
 
 http://blog.csdn.net/pipisorry/article/details/41762945
 
+http://hyry.dip.jp/tech/book/page/scipynew/scipy-810-sparse.html#sparse
+
+http://blog.csdn.net/stereohomology/article/details/37657777
+
 **PS：**
 
 注意一下序列化，参考链接：
