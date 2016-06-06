@@ -21,15 +21,80 @@
 <div id="title">Python 稀疏矩阵表示</div>
   <div id="content">
   <p>本博客主要用于记录python稀疏矩阵表示方法;</p>
-<p><strong>方法1：</strong></p>
+<h2 id="1">方法1：</h2>
 <p>用dict以二进制字符串形式存储，参考链接：</p>
 <p>http://www.jb51.net/article/51609.htm</p>
-<p><strong>方法2:</strong></p>
-<p>使用scipy进行存储，参考链接：</p>
+<h2 id="2">方法2:</h2>
+<p>使用scipy中的sparse进行存储，sparse库中提供多种表示稀疏矩阵的格式，</p>
+<h3 id="1_1">1.稀疏矩阵表示</h3>
+<p>1) dok_matrix，继承于dict，以（行，列）作为key，对应值为矩阵中位于（行，列）中的元素值，适合单个元素的添加，删除和存取操作，通常用来逐渐添加非零元素，然后转换成其它支持快速运算的格式。</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">from</span> <span class="n">scipy</span> <span class="n">import</span> <span class="n">sparse</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">dok_matrix</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">print</span> <span class="n">a</span><span class="p">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="n">print</span> <span class="n">a</span><span class="p">.</span><span class="n">values</span><span class="p">()</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="k">[(0, 1), (1, 3)]</span>
+<span class="k">[2.0, 3.0]</span>
+</pre></div>
+
+
+<p>2）lil_matrix,使用两个列表保存非零元素，data保存每行中的非零元素，rows保存非零元素所在的列，适合逐个添加元素，并且能够快速获取行相关的数据。</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">from</span> <span class="n">scipy</span> <span class="n">import</span> <span class="n">sparse</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">lil_matrix</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">b</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">print</span> <span class="n">b</span><span class="p">.</span><span class="n">data</span>
+<span class="n">print</span> <span class="n">b</span><span class="p">.</span><span class="n">rows</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="n">array</span><span class="p">([[],</span> <span class="p">[],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">object</span><span class="p">)</span>
+<span class="n">array</span><span class="p">([[],</span> <span class="p">[],</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">object</span><span class="p">)</span>
+</pre></div>
+
+
+<p>3）coo_matrix，采用三个数组row、col和data保存非零元素的信息，三个数组的长度相同，row保存元素的行，col保存元素的列，data保存元素的值，coo_matrix不支持元素的存取和增删，一旦创建后，除了将它转换成其它格式的矩阵，几乎无法对其做任何操作和矩阵运算。</p>
+<p>coo_matrix支持重复元素，即同一行列坐标可以出现多次，当转换成其它格式的矩阵时，将对同一行列坐标对应的多个值进行求和。</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">from</span> <span class="n">scipy</span> <span class="n">import</span> <span class="n">sparse</span>
+<span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">col</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,(</span><span class="n">row</span><span class="p">,</span><span class="n">col</span><span class="p">)),</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">print</span> <span class="n">c</span><span class="p">.</span><span class="n">col</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="n">row</span><span class="p">,</span><span class="n">c</span><span class="p">.</span><span class="n">data</span>
+<span class="n">print</span> <span class="n">c</span><span class="p">.</span><span class="n">toarray</span><span class="p">()</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="k">[3 4 2 3] [2 3 3 2] [ 1  2  3 10]</span>
+<span class="k">[[ 0  0  0  0  0  0]</span>
+ <span class="k">[ 0  0  0  0  0  0]</span>
+ <span class="k">[ 0  0  0 11  0  0]</span>
+ <span class="k">[ 0  0  3  0  2  0]</span>
+ <span class="k">[ 0  0  0  0  0  0]]</span>
+</pre></div>
+
+
+<h3 id="2_1">2.稀疏矩阵存取</h3>
+<p>有时候需要将稀疏矩阵保存至本地，以后直接读取即可。</p>
+<p>1）savetxt/loadtxt,保存为文本文件，会将所有的元素保存，本地文件较大。</p>
+<p>2）mmwrite/mmread，保存为mtx文件，只保存非零元素，本地文件小。</p>
+<p>其中mmread/mmwrite，是在scipy.io库中。</p>
+<p>参考链接：</p>
 <p>http://blog.csdn.net/pipisorry/article/details/41762945</p>
 <p>http://hyry.dip.jp/tech/book/page/scipynew/scipy-810-sparse.html#sparse</p>
 <p>http://blog.csdn.net/stereohomology/article/details/37657777</p>
-<p><strong>PS：</strong></p>
+<h2 id="ps">PS：</h2>
 <p>注意一下序列化，参考链接：</p>
 <p>http://www.cnblogs.com/linyawen/archive/2012/03/22/2411381.html</p>
 </div>
