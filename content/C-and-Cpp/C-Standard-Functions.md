@@ -13,6 +13,7 @@ date: 2016-06-13 10:56
 demo：
 
     #include <assert.h>
+    #include <stdio.h>
 
     int main()
     {
@@ -106,3 +107,77 @@ EDOM，源自于函数的参数超出范围;
 ERANGE，源自于函数的结果超出范围;
 
 EILSEQ，源自于不合法的字符顺序;
+
+## 4.<float.h>浮点数运算 ##
+
+<float.h>定义了浮点数值的最大最小限，浮点型数值以下面的方式定义：符号-value E 指数  符号是正负，value是数字的值。
+
+下面的值是用#define定义，所有实例里FLT指的是float，DBL是double，LDBL指的是long double。
+
+FLT_ROUNDS：定义浮点型数值四舍五入的方式，-1是不确定，0是向0,1是向最近，2是向正无穷大，3是负无穷大。
+
+FLT_RADIX 2：定义指数的基本表示（比如base-2是二进制，base-10是十进制，base-16是十六进制）。
+
+FLT_MANT_DIG，DBL_MANT_DIG，LDBL_MANT_DIG：定义数值里数字的个数。
+
+FLT_DIG 6，DBL_DIG 10,LDBL_DIG 10：再四舍五入之后能不更改表示的最大小数位。
+
+FLT_MIN_EXP，DBL_MIN_EXP，LDBL_MIN_EXP：FLT_RADIX的指数的最小负整数值。
+
+FLT_MIN_10_EXP -37,DBL_MIN_10_EXP -37,LDBL_MIN_10_EXP -37：10进制表示法的指数的最小负整数值。
+
+FLT_MAX_EXP，DBL_MAX_EXP，LDBL_MAX_EXP：FLT_RADIX的指数的最大整数值。
+
+FLT_MAX_10_EXP +37,DBL_MAX_10_EXP +37,LDBL_MAX_10_EXP +37：10进制表示法的指数的最大整数值。
+
+FLT_MAX 1E+37,DBL_MAX 1E+37，LDBL_MAX 1E+37：浮点型的最大限。
+
+FLT_EPSILON 1E-5,DBL_EPSILON 1E-9,LDBL_EPSILON 1E-9：能表示的最小有符号数。
+
+## 5.<limits.h> ##
+
+CHAR_BIT：一个ASCII字符长度。
+
+SCHAR_MIN：字符型最小值。
+
+SCHAR_MAX：字符型最大值。
+
+UCHAR_MAX：无符号字符型最大值。
+
+CHAR_MIN，CHAR_MAX：char字符的最小最大值，如果char字符表示有符号整数，那么它们的值就和有符号整数一样，否则char字符的最小值就是0,最大值就是无符号char字符的最大值。
+
+MB_LEN_MAX：一个祖父所占最大字节数。
+
+SHRT_MIN：最小短整型。
+
+SHRT_MAX：最大短整型。
+
+USHRT_MAX：最大无符号短整型。
+
+INT_MIN：最小整型。
+
+INT_MAX：最大整型。
+
+UINT_MIN：最大无符号整型。
+
+LONG_MIN：最小长整型。
+
+LONG_MAX：最大长整型。
+
+ULONG_MAX：无符号长整型。
+
+## 6.<locale.h>本地化 ##
+
+<locale.h>定义了区域设置相关的函数。
+
+setlocale函数：用于设置或返回当前的区域特性。
+
+定义:setlocale(constant,location)
+
+constant：指定设置的场景信息。
+
+location：指定需要进行场景设置的国家或区域。
+
+localeconv函数：用于返回当前区域中的数字和货币信息（保存在struct lconv结构实例中）。
+
+定义:struct lconv * localeconv(void)
