@@ -154,12 +154,12 @@
 <p><strong>取整与取余：</strong></p>
 <p>double modf(double x,double *y)：将参数的整数部分通过指针回传，返回小数部分</p>
 <p>double fmod(double x,double y)：返回两个参数相除的余数</p>
-<h2 id="8">8.<setjmp.h></h2>
+<h2 id="8">8.<setjmp.h>非局部跳转</h2>
 <p><setjmp.h>中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。</p>
 <p>int setjmp(jmp_buf env)：设置跳转点，将当前程序的状态保存在结构env，为调用宏longjmp设置一个跳转点。</p>
 <p>longjmp(jmp_buf env,int retval)：跳转，利用setjmp设置的env变量进行跳转，程序会自动跳转到setjmp宏的返回语句处，返回值为retval。</p>
 <p>一般，宏setjmp和longjmp是成对使用，这样程序流程可以从一个深层嵌套的函数中返回。</p>
-<h2 id="9">9.<signal.h></h2>
+<h2 id="9">9.<signal.h>信号</h2>
 <p><signal.h>头文件中，提供了一些函数用以处理执行过程中所产生的信号。</p>
 <p>typedef sig_atomic_t</p>
 <p>sig_atomic_t：类型是int类型，用于接受signal函数的返回值</p>
