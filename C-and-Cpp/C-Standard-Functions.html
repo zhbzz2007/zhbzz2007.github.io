@@ -99,7 +99,7 @@
 <p>FLT_MAX_10_EXP +37,DBL_MAX_10_EXP +37,LDBL_MAX_10_EXP +37：10进制表示法的指数的最大整数值。</p>
 <p>FLT_MAX 1E+37,DBL_MAX 1E+37，LDBL_MAX 1E+37：浮点型的最大限。</p>
 <p>FLT_EPSILON 1E-5,DBL_EPSILON 1E-9,LDBL_EPSILON 1E-9：能表示的最小有符号数。</p>
-<h2 id="5">5.<limits.h></h2>
+<h2 id="5">5.<limits.h>取值范围</h2>
 <p>CHAR_BIT：一个ASCII字符长度。</p>
 <p>SCHAR_MIN：字符型最小值。</p>
 <p>SCHAR_MAX：字符型最大值。</p>
@@ -123,6 +123,67 @@
 <p>location：指定需要进行场景设置的国家或区域。</p>
 <p>localeconv函数：用于返回当前区域中的数字和货币信息（保存在struct lconv结构实例中）。</p>
 <p>定义:struct lconv * localeconv(void)</p>
+<h2 id="7">7.<math.h>数学函数</h2>
+<p><math.h>是C语言中的数学函数库。</p>
+<p><strong>三角函数：</strong></p>
+<p>double sin(double x)：正弦</p>
+<p>double cos(double x)：余弦</p>
+<p>double tan(double x)：正切</p>
+<p><strong>反三角函数：</strong></p>
+<p>double asin(double x)：反正弦，结果介于[-PI/2,PI/2]</p>
+<p>double acos(double x)：反余弦，结果介于[0,PI]</p>
+<p>double atan(double x)：反正切（主值），结果介于[-PI/2,PI/2]</p>
+<p>double atan2(double y,double)：反正切（整圆值），结果介于[-PI，PI]</p>
+<p><strong>双曲三角函数：</strong></p>
+<p>double sinh(double x)：计算双曲正弦</p>
+<p>double cosh(double x)：计算双曲余弦</p>
+<p>double tanh(double x)：计算双曲正切</p>
+<p><strong>指数和对数：</strong></p>
+<p>double exp(double x)：求取自然数e的幂</p>
+<p>double sqrt(double x)：开平方</p>
+<p>double log(double x)：以e为底的对数</p>
+<p>double log10(double x)：以10为底的对数</p>
+<p>double pow(double x,double y)：计算以x为底的y次幂</p>
+<p>float powf(float x,float y)：与pow一致，输入与输出皆为浮点数</p>
+<p><strong>取整：</strong></p>
+<p>double ceil(double x)：向上取整</p>
+<p>double floor(double x)：向下取整</p>
+<p><strong>标准化浮点数：</strong></p>
+<p>double frexq(double f,int *p)：标准化浮点数，f = x * 2^p，已知f求x，p（x介于[0.5,1]）</p>
+<p>double ldexp(double x,int p)：与frexp相反，已知x，p求f</p>
+<p><strong>取整与取余：</strong></p>
+<p>double modf(double x,double *y)：将参数的整数部分通过指针回传，返回小数部分</p>
+<p>double fmod(double x,double y)：返回两个参数相除的余数</p>
+<h2 id="8">8.<setjmp.h></h2>
+<p><setjmp.h>中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。</p>
+<p>int setjmp(jmp_buf env)：设置跳转点，将当前程序的状态保存在结构env，为调用宏longjmp设置一个跳转点。</p>
+<p>longjmp(jmp_buf env,int retval)：跳转，利用setjmp设置的env变量进行跳转，程序会自动跳转到setjmp宏的返回语句处，返回值为retval。</p>
+<p>一般，宏setjmp和longjmp是成对使用，这样程序流程可以从一个深层嵌套的函数中返回。</p>
+<h2 id="9">9.<signal.h></h2>
+<p><signal.h>头文件中，提供了一些函数用以处理执行过程中所产生的信号。</p>
+<p>typedef sig_atomic_t</p>
+<p>sig_atomic_t：类型是int类型，用于接受signal函数的返回值</p>
+<p><strong>宏：</strong></p>
+<p>以SIG_开头的宏用于定义信号处理函数，</p>
+<p>SIG_DFL：默认信号处理函数</p>
+<p>SIG_ERR：表示一个错误信号，当signal函数调用失败时的返回值</p>
+<p>SIG_IGN：信号处理函数，表示忽略该信号</p>
+<p>SIG开头的宏是用来在下列情况下，用于表示一个信号代码，</p>
+<p>SIGABRT：异常中止（abort函数产生）</p>
+<p>SIGFPE：浮点错误（0作为除数产生的错误，非法的操作）</p>
+<p>SIGILL：非法错误（指令）</p>
+<p>SIGINT：交互式操作产生的信号（如CRTL+C）</p>
+<p>SIGSEGV：无效访问存储（片段的非法访问，内存非法访问）</p>
+<p>SIGTERM：终止请求</p>
+<p><strong>函数：</strong></p>
+<p>void (*signal(int sig,void (*func)(int))) (int):sig表示一个信号代码，即上面所定义的SIG开头的宏，当有信号出现的时候，参数func所定义的函数就会被调用。</p>
+<p>如果func等于SIG_DFL，则表示调用默认的处理函数;</p>
+<p>如果等于SIG_IGN，则表示这个信号被忽略（不做处理）;</p>
+<p>如果func是用户自定义的函数，则会先调用默认的处理函数，然后再调用用户自定义的函数。自定义函数，有意额参数，参数类型为int，用来表示信号代码，同时，函数必须以return,abort,exit或longjmp等语句结束。当自定义函数运行结束，程序会继续从被终止的地方继续运行。（除非信号是SIGFPE导致结果未定义，则可能无法继续运行）</p>
+<p>如果调用signal函数成功，则会返回一个指针，该指针指向为所指定的信号类别的所预先定义的信号处理器。</p>
+<p>如果调用失败，则返回一个SIG_ERR，同时errno的值也会被相应的改变。</p>
+<p>int raise(int sig)：发送一个sig，信号参数为SIG开头的宏。</p>
+<p>如果调用成功，返回0,否则返回一个非零值。</p>
 </div>
 
         </div>
