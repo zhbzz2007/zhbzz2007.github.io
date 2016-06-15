@@ -244,7 +244,7 @@ double modf(double x,double \*y)：将参数的整数部分通过指针回传，
 
 double fmod(double x,double y)：返回两个参数相除的余数
 
-## 8.<setjmp.h> ##
+## 8.<setjmp.h>非局部跳转 ##
 
 <setjmp.h>中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。
 
@@ -254,7 +254,7 @@ longjmp(jmp_buf env,int retval)：跳转，利用setjmp设置的env变量进行�
 
 一般，宏setjmp和longjmp是成对使用，这样程序流程可以从一个深层嵌套的函数中返回。
 
-## 9.<signal.h> ##
+## 9.<signal.h>信号 ##
 
 <signal.h>头文件中，提供了一些函数用以处理执行过程中所产生的信号。
 
