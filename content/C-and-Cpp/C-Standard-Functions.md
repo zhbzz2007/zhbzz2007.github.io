@@ -6,9 +6,9 @@ date: 2016-06-13 10:56
 
 笔记涵盖C语言标准库的15个头文件解释以及相应函数，持续更新。
 
-##1.<assert.h> 断言 ##
+##1.assert.h 断言 ##
 
-头文件<assert.h>提供了宏assert的定义，如果断言不为真，则程序会在标准错误流输出提示信息，并使程序异常中止，调用abort()。
+assert.h 提供了宏assert的定义，如果断言不为真，则程序会在标准错误流输出提示信息，并使程序异常中止，调用abort()。
 
 demo：
 
@@ -39,9 +39,9 @@ output:
 
 正常输出了printf的内容。
 
-##2.<ctype.h> 字符测试 ##
+##2.ctype.h 字符测试 ##
 
-<ctype.h> 主要提供两类函数：字符测试函数和字符大小转换函数，提供的函数中都是以int类型为参数，并返回一个int类型的值，实参类型应该隐式转换或者显式转换为int类型。
+ctype.h 主要提供两类函数：字符测试函数和字符大小转换函数，提供的函数中都是以int类型为参数，并返回一个int类型的值，实参类型应该隐式转换或者显式转换为int类型。
 
 1.islanum
 
@@ -96,9 +96,9 @@ output:
 定义：int toupper(int c)，转换为大小字母。
 
 
-##3.<errno.h> 错误代码 ##
+##3.errno.h 错误代码 ##
 
-<errno.h> 定义了通过错误码来返回错误信息的宏，errno 宏定义为一个int形态的左值，包含任何函数使用errno功能所产生的上一个错误码。
+errno.h 定义了通过错误码来返回错误信息的宏，errno 宏定义为一个int形态的左值，包含任何函数使用errno功能所产生的上一个错误码。
 
 一些表示错误码，定义为整数值的宏：
 
@@ -108,9 +108,9 @@ ERANGE，源自于函数的结果超出范围;
 
 EILSEQ，源自于不合法的字符顺序;
 
-## 4.<float.h>浮点数运算 ##
+## 4.float.h 浮点数运算 ##
 
-<float.h>定义了浮点数值的最大最小限，浮点型数值以下面的方式定义：符号-value E 指数  符号是正负，value是数字的值。
+float.h 定义了浮点数值的最大最小限，浮点型数值以下面的方式定义：符号-value E 指数  符号是正负，value是数字的值。
 
 下面的值是用#define定义，所有实例里FLT指的是float，DBL是double，LDBL指的是long double。
 
@@ -134,7 +134,7 @@ FLT_MAX 1E+37,DBL_MAX 1E+37，LDBL_MAX 1E+37：浮点型的最大限。
 
 FLT_EPSILON 1E-5,DBL_EPSILON 1E-9,LDBL_EPSILON 1E-9：能表示的最小有符号数。
 
-## 5.<limits.h>取值范围 ##
+## 5.limits.h 取值范围 ##
 
 CHAR_BIT：一个ASCII字符长度。
 
@@ -166,9 +166,9 @@ LONG_MAX：最大长整型。
 
 ULONG_MAX：无符号长整型。
 
-## 6.<locale.h>本地化 ##
+## 6.locale.h 本地化 ##
 
-<locale.h>定义了区域设置相关的函数。
+locale.h 定义了区域设置相关的函数。
 
 setlocale函数：用于设置或返回当前的区域特性。
 
@@ -182,9 +182,9 @@ localeconv函数：用于返回当前区域中的数字和货币信息（保存�
 
 定义:struct lconv * localeconv(void)
 
-## 7.<math.h>数学函数 ##
+## 7.math.h 数学函数 ##
 
-<math.h>是C语言中的数学函数库。
+math.h 是C语言中的数学函数库。
 
 **三角函数：**
 
@@ -244,9 +244,9 @@ double modf(double x,double \*y)：将参数的整数部分通过指针回传，
 
 double fmod(double x,double y)：返回两个参数相除的余数;
 
-## 8.<setjmp.h>非局部跳转 ##
+## 8.setjmp.h 非局部跳转 ##
 
-<setjmp.h>中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。
+setjmp.h中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。
 
 int setjmp(jmp_buf env)：设置跳转点，将当前程序的状态保存在结构env，为调用宏longjmp设置一个跳转点。
 
@@ -254,9 +254,9 @@ longjmp(jmp_buf env,int retval)：跳转，利用setjmp设置的env变量进行�
 
 一般，宏setjmp和longjmp是成对使用，这样程序流程可以从一个深层嵌套的函数中返回。
 
-## 9.<signal.h>信号 ##
+## 9.signal.h 信号 ##
 
-<signal.h>头文件中，提供了一些函数用以处理执行过程中所产生的信号。
+signal.h 头文件中，提供了一些函数用以处理执行过程中所产生的信号。
 
 typedef sig_atomic_t
 
@@ -305,9 +305,9 @@ int raise(int sig)：发送一个sig，信号参数为SIG开头的宏。
 如果调用成功，返回0，否则返回一个非零值。
 
 
-## 10.<stdarg.h>可变参数 ##
+## 10.stdarg.h 可变参数 ##
 
-<stdarg.h>定义了一些宏，当函数参数未知时去获取函数的参数。
+stdarg.h 定义了一些宏，当函数参数未知时去获取函数的参数。
 
 **变量：**
 
@@ -321,9 +321,9 @@ type va_arg(va_list ap,type)：用type类型扩展到参数表的下个参数，
 
 void va_end(va_list ap)：允许一个有参数表（使用va_start宏）的函数返回，如果返回之前没有调用va_end，结果会是undefined。参数变量列表可能不再使用（在没调用va_staart的情况下va_end）;
 
-## 11.<stddef.h>一些常数，类型和变量 ##
+## 11.stddef.h 一些常数，类型和变量 ##
 
-<stddef.h>定义了一些标准定义，许多定义宴会出现在其他的头文件里。
+stddef.h 定义了一些标准定义，许多定义宴会出现在其他的头文件里。
 
 **宏：**
 
@@ -340,7 +340,7 @@ typedef size_t：是sizeof一个关键词得到的无符号整数值;
 typedef wchar_t：一个宽字符常量的大小，是整数类型;
 
 
-## 12.<stdio.h>输入和输出 ##
+## 12.stdio.h 输入和输出 ##
 
 <stdio.h>定义了用于输入和输出的函数、类型和宏。
 
