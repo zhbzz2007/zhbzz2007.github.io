@@ -21,8 +21,8 @@
 <div id="title">C 语言标准库函数</div>
   <div id="content">
   <p>笔记涵盖C语言标准库的15个头文件解释以及相应函数，持续更新。</p>
-<h2 id="1">1.<assert.h> 断言</h2>
-<p>头文件<assert.h>提供了宏assert的定义，如果断言不为真，则程序会在标准错误流输出提示信息，并使程序异常中止，调用abort()。</p>
+<h2 id="1asserth">1.assert.h 断言</h2>
+<p>assert.h 提供了宏assert的定义，如果断言不为真，则程序会在标准错误流输出提示信息，并使程序异常中止，调用abort()。</p>
 <p>demo：</p>
 <div class="hlcode"><pre><span class="cp">#include &lt;assert.h&gt;</span>
 <span class="cp">#include &lt;stdio.h&gt;</span>
@@ -52,8 +52,8 @@
 
 
 <p>正常输出了printf的内容。</p>
-<h2 id="2">2.<ctype.h> 字符测试</h2>
-<p><ctype.h> 主要提供两类函数：字符测试函数和字符大小转换函数，提供的函数中都是以int类型为参数，并返回一个int类型的值，实参类型应该隐式转换或者显式转换为int类型。</p>
+<h2 id="2ctypeh">2.ctype.h 字符测试</h2>
+<p>ctype.h 主要提供两类函数：字符测试函数和字符大小转换函数，提供的函数中都是以int类型为参数，并返回一个int类型的值，实参类型应该隐式转换或者显式转换为int类型。</p>
 <p>1.islanum</p>
 <p>定义：int isalnum(int c)，判断是否是字母或者数字。</p>
 <p>2.isalpha</p>
@@ -80,14 +80,14 @@
 <p>定义：int tolower(int c)，转换为小写字母。</p>
 <p>13.toupper</p>
 <p>定义：int toupper(int c)，转换为大小字母。</p>
-<h2 id="3">3.<errno.h> 错误代码</h2>
-<p><errno.h> 定义了通过错误码来返回错误信息的宏，errno 宏定义为一个int形态的左值，包含任何函数使用errno功能所产生的上一个错误码。</p>
+<h2 id="3errnoh">3.errno.h 错误代码</h2>
+<p>errno.h 定义了通过错误码来返回错误信息的宏，errno 宏定义为一个int形态的左值，包含任何函数使用errno功能所产生的上一个错误码。</p>
 <p>一些表示错误码，定义为整数值的宏：</p>
 <p>EDOM，源自于函数的参数超出范围;</p>
 <p>ERANGE，源自于函数的结果超出范围;</p>
 <p>EILSEQ，源自于不合法的字符顺序;</p>
-<h2 id="4">4.<float.h>浮点数运算</h2>
-<p><float.h>定义了浮点数值的最大最小限，浮点型数值以下面的方式定义：符号-value E 指数  符号是正负，value是数字的值。</p>
+<h2 id="4floath">4.float.h 浮点数运算</h2>
+<p>float.h 定义了浮点数值的最大最小限，浮点型数值以下面的方式定义：符号-value E 指数  符号是正负，value是数字的值。</p>
 <p>下面的值是用#define定义，所有实例里FLT指的是float，DBL是double，LDBL指的是long double。</p>
 <p>FLT_ROUNDS：定义浮点型数值四舍五入的方式，-1是不确定，0是向0,1是向最近，2是向正无穷大，3是负无穷大。</p>
 <p>FLT_RADIX 2：定义指数的基本表示（比如base-2是二进制，base-10是十进制，base-16是十六进制）。</p>
@@ -99,7 +99,7 @@
 <p>FLT_MAX_10_EXP +37,DBL_MAX_10_EXP +37,LDBL_MAX_10_EXP +37：10进制表示法的指数的最大整数值。</p>
 <p>FLT_MAX 1E+37,DBL_MAX 1E+37，LDBL_MAX 1E+37：浮点型的最大限。</p>
 <p>FLT_EPSILON 1E-5,DBL_EPSILON 1E-9,LDBL_EPSILON 1E-9：能表示的最小有符号数。</p>
-<h2 id="5">5.<limits.h>取值范围</h2>
+<h2 id="5limitsh">5.limits.h 取值范围</h2>
 <p>CHAR_BIT：一个ASCII字符长度。</p>
 <p>SCHAR_MIN：字符型最小值。</p>
 <p>SCHAR_MAX：字符型最大值。</p>
@@ -115,16 +115,16 @@
 <p>LONG_MIN：最小长整型。</p>
 <p>LONG_MAX：最大长整型。</p>
 <p>ULONG_MAX：无符号长整型。</p>
-<h2 id="6">6.<locale.h>本地化</h2>
-<p><locale.h>定义了区域设置相关的函数。</p>
+<h2 id="6localeh">6.locale.h 本地化</h2>
+<p>locale.h 定义了区域设置相关的函数。</p>
 <p>setlocale函数：用于设置或返回当前的区域特性。</p>
 <p>定义:setlocale(constant,location)</p>
 <p>constant：指定设置的场景信息。</p>
 <p>location：指定需要进行场景设置的国家或区域。</p>
 <p>localeconv函数：用于返回当前区域中的数字和货币信息（保存在struct lconv结构实例中）。</p>
 <p>定义:struct lconv * localeconv(void)</p>
-<h2 id="7">7.<math.h>数学函数</h2>
-<p><math.h>是C语言中的数学函数库。</p>
+<h2 id="7mathh">7.math.h 数学函数</h2>
+<p>math.h 是C语言中的数学函数库。</p>
 <p><strong>三角函数：</strong></p>
 <p>double sin(double x)：正弦;</p>
 <p>double cos(double x)：余弦;</p>
@@ -154,13 +154,13 @@
 <p><strong>取整与取余：</strong></p>
 <p>double modf(double x,double *y)：将参数的整数部分通过指针回传，返回小数部分;</p>
 <p>double fmod(double x,double y)：返回两个参数相除的余数;</p>
-<h2 id="8">8.<setjmp.h>非局部跳转</h2>
-<p><setjmp.h>中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。</p>
+<h2 id="8setjmph">8.setjmp.h 非局部跳转</h2>
+<p>setjmp.h中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。</p>
 <p>int setjmp(jmp_buf env)：设置跳转点，将当前程序的状态保存在结构env，为调用宏longjmp设置一个跳转点。</p>
 <p>longjmp(jmp_buf env,int retval)：跳转，利用setjmp设置的env变量进行跳转，程序会自动跳转到setjmp宏的返回语句处，返回值为retval。</p>
 <p>一般，宏setjmp和longjmp是成对使用，这样程序流程可以从一个深层嵌套的函数中返回。</p>
-<h2 id="9">9.<signal.h>信号</h2>
-<p><signal.h>头文件中，提供了一些函数用以处理执行过程中所产生的信号。</p>
+<h2 id="9signalh">9.signal.h 信号</h2>
+<p>signal.h 头文件中，提供了一些函数用以处理执行过程中所产生的信号。</p>
 <p>typedef sig_atomic_t</p>
 <p>sig_atomic_t：类型是int类型，用于接受signal函数的返回值;</p>
 <p><strong>宏：</strong></p>
@@ -184,16 +184,16 @@
 <p>如果调用失败，则返回一个SIG_ERR，同时errno的值也会被相应的改变。</p>
 <p>int raise(int sig)：发送一个sig，信号参数为SIG开头的宏。</p>
 <p>如果调用成功，返回0，否则返回一个非零值。</p>
-<h2 id="10">10.<stdarg.h>可变参数</h2>
-<p><stdarg.h>定义了一些宏，当函数参数未知时去获取函数的参数。</p>
+<h2 id="10stdargh">10.stdarg.h 可变参数</h2>
+<p>stdarg.h 定义了一些宏，当函数参数未知时去获取函数的参数。</p>
 <p><strong>变量：</strong></p>
 <p>typedef va_list：通过stdarg宏定义来反问一个函数的参数表，参数列表的末尾会用省略号省略。</p>
 <p><strong>宏：</strong></p>
 <p>void va_start(va_list ap,last_arg)：用va_arg和va_end宏初始化参数ap，last_arg是传给函数的固定参数的最后一个，省略号之前的那个参数，注意va_start必须在va_arg和va_end之前调用;</p>
 <p>type va_arg(va_list ap,type)：用type类型扩展到参数表的下个参数，注意，ap必须用va_start初始化，如果没有下一个参数，结果会是undefined;</p>
 <p>void va_end(va_list ap)：允许一个有参数表（使用va_start宏）的函数返回，如果返回之前没有调用va_end，结果会是undefined。参数变量列表可能不再使用（在没调用va_staart的情况下va_end）;</p>
-<h2 id="11">11.<stddef.h>一些常数，类型和变量</h2>
-<p><stddef.h>定义了一些标准定义，许多定义宴会出现在其他的头文件里。</p>
+<h2 id="11stddefh">11.stddef.h 一些常数，类型和变量</h2>
+<p>stddef.h 定义了一些标准定义，许多定义宴会出现在其他的头文件里。</p>
 <p><strong>宏：</strong></p>
 <p>NULL：空指针的常量值;</p>
 <p>offsetof(type,member-designator)：返回一个结构提成员相对于结构体起始地址的偏移量（以字节为单位），type是结构体的名字，member-designator是结构体成员的名字;</p>
@@ -201,7 +201,7 @@
 <p>typedef ptrdiff_t：两个指针相减的结果;</p>
 <p>typedef size_t：是sizeof一个关键词得到的无符号整数值;</p>
 <p>typedef wchar_t：一个宽字符常量的大小，是整数类型;</p>
-<h2 id="12">12.<stdio.h>输入和输出</h2>
+<h2 id="12stdioh">12.stdio.h 输入和输出</h2>
 <p><stdio.h>定义了用于输入和输出的函数、类型和宏。</p>
 <p><strong>变量：</strong></p>
 <p>typedef FILE：用于声明文件指针;</p>
