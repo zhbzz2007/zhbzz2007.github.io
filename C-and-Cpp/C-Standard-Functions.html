@@ -126,34 +126,34 @@
 <h2 id="7">7.<math.h>数学函数</h2>
 <p><math.h>是C语言中的数学函数库。</p>
 <p><strong>三角函数：</strong></p>
-<p>double sin(double x)：正弦</p>
-<p>double cos(double x)：余弦</p>
-<p>double tan(double x)：正切</p>
+<p>double sin(double x)：正弦;</p>
+<p>double cos(double x)：余弦;</p>
+<p>double tan(double x)：正切;</p>
 <p><strong>反三角函数：</strong></p>
-<p>double asin(double x)：反正弦，结果介于[-PI/2,PI/2]</p>
-<p>double acos(double x)：反余弦，结果介于[0,PI]</p>
-<p>double atan(double x)：反正切（主值），结果介于[-PI/2,PI/2]</p>
-<p>double atan2(double y,double)：反正切（整圆值），结果介于[-PI，PI]</p>
+<p>double asin(double x)：反正弦，结果介于[-PI/2,PI/2];</p>
+<p>double acos(double x)：反余弦，结果介于[0,PI];</p>
+<p>double atan(double x)：反正切（主值），结果介于[-PI/2,PI/2];</p>
+<p>double atan2(double y,double)：反正切（整圆值），结果介于[-PI，PI];</p>
 <p><strong>双曲三角函数：</strong></p>
-<p>double sinh(double x)：计算双曲正弦</p>
-<p>double cosh(double x)：计算双曲余弦</p>
-<p>double tanh(double x)：计算双曲正切</p>
+<p>double sinh(double x)：计算双曲正弦;</p>
+<p>double cosh(double x)：计算双曲余弦;</p>
+<p>double tanh(double x)：计算双曲正切;</p>
 <p><strong>指数和对数：</strong></p>
-<p>double exp(double x)：求取自然数e的幂</p>
-<p>double sqrt(double x)：开平方</p>
-<p>double log(double x)：以e为底的对数</p>
-<p>double log10(double x)：以10为底的对数</p>
-<p>double pow(double x,double y)：计算以x为底的y次幂</p>
-<p>float powf(float x,float y)：与pow一致，输入与输出皆为浮点数</p>
+<p>double exp(double x)：求取自然数e的幂;</p>
+<p>double sqrt(double x)：开平方;</p>
+<p>double log(double x)：以e为底的对数;</p>
+<p>double log10(double x)：以10为底的对数;</p>
+<p>double pow(double x,double y)：计算以x为底的y次幂;</p>
+<p>float powf(float x,float y)：与pow一致，输入与输出皆为浮点数;</p>
 <p><strong>取整：</strong></p>
-<p>double ceil(double x)：向上取整</p>
-<p>double floor(double x)：向下取整</p>
+<p>double ceil(double x)：向上取整;</p>
+<p>double floor(double x)：向下取整;</p>
 <p><strong>标准化浮点数：</strong></p>
-<p>double frexq(double f,int *p)：标准化浮点数，f = x * 2^p，已知f求x，p（x介于[0.5,1]）</p>
-<p>double ldexp(double x,int p)：与frexp相反，已知x，p求f</p>
+<p>double frexq(double f,int *p)：标准化浮点数，f = x * 2^p，已知f求x，p（x介于[0.5,1]）;</p>
+<p>double ldexp(double x,int p)：与frexp相反，已知x，p求f;</p>
 <p><strong>取整与取余：</strong></p>
-<p>double modf(double x,double *y)：将参数的整数部分通过指针回传，返回小数部分</p>
-<p>double fmod(double x,double y)：返回两个参数相除的余数</p>
+<p>double modf(double x,double *y)：将参数的整数部分通过指针回传，返回小数部分;</p>
+<p>double fmod(double x,double y)：返回两个参数相除的余数;</p>
 <h2 id="8">8.<setjmp.h>非局部跳转</h2>
 <p><setjmp.h>中定义了一种特别的函数调用和函数返回顺序的方式，允许程序流程立即从一个深层嵌套的函数中返回。</p>
 <p>int setjmp(jmp_buf env)：设置跳转点，将当前程序的状态保存在结构env，为调用宏longjmp设置一个跳转点。</p>
@@ -162,19 +162,19 @@
 <h2 id="9">9.<signal.h>信号</h2>
 <p><signal.h>头文件中，提供了一些函数用以处理执行过程中所产生的信号。</p>
 <p>typedef sig_atomic_t</p>
-<p>sig_atomic_t：类型是int类型，用于接受signal函数的返回值</p>
+<p>sig_atomic_t：类型是int类型，用于接受signal函数的返回值;</p>
 <p><strong>宏：</strong></p>
 <p>以SIG_开头的宏用于定义信号处理函数，</p>
-<p>SIG_DFL：默认信号处理函数</p>
-<p>SIG_ERR：表示一个错误信号，当signal函数调用失败时的返回值</p>
-<p>SIG_IGN：信号处理函数，表示忽略该信号</p>
+<p>SIG_DFL：默认信号处理函数;</p>
+<p>SIG_ERR：表示一个错误信号，当signal函数调用失败时的返回值;</p>
+<p>SIG_IGN：信号处理函数，表示忽略该信号;</p>
 <p>SIG开头的宏是用来在下列情况下，用于表示一个信号代码，</p>
-<p>SIGABRT：异常中止（abort函数产生）</p>
-<p>SIGFPE：浮点错误（0作为除数产生的错误，非法的操作）</p>
-<p>SIGILL：非法错误（指令）</p>
-<p>SIGINT：交互式操作产生的信号（如CRTL+C）</p>
-<p>SIGSEGV：无效访问存储（片段的非法访问，内存非法访问）</p>
-<p>SIGTERM：终止请求</p>
+<p>SIGABRT：异常中止（abort函数产生）;</p>
+<p>SIGFPE：浮点错误（0作为除数产生的错误，非法的操作）;</p>
+<p>SIGILL：非法错误（指令）;</p>
+<p>SIGINT：交互式操作产生的信号（如CRTL+C）;</p>
+<p>SIGSEGV：无效访问存储（片段的非法访问，内存非法访问）;</p>
+<p>SIGTERM：终止请求;</p>
 <p><strong>函数：</strong></p>
 <p>void (*signal(int sig,void (*func)(int))) (int):sig表示一个信号代码，即上面所定义的SIG开头的宏，当有信号出现的时候，参数func所定义的函数就会被调用。</p>
 <p>如果func等于SIG_DFL，则表示调用默认的处理函数;</p>
@@ -183,7 +183,89 @@
 <p>如果调用signal函数成功，则会返回一个指针，该指针指向为所指定的信号类别的所预先定义的信号处理器。</p>
 <p>如果调用失败，则返回一个SIG_ERR，同时errno的值也会被相应的改变。</p>
 <p>int raise(int sig)：发送一个sig，信号参数为SIG开头的宏。</p>
-<p>如果调用成功，返回0,否则返回一个非零值。</p>
+<p>如果调用成功，返回0，否则返回一个非零值。</p>
+<h2 id="10">10.<stdarg.h>可变参数</h2>
+<p><stdarg.h>定义了一些宏，当函数参数未知时去获取函数的参数。</p>
+<p><strong>变量：</strong></p>
+<p>typedef va_list：通过stdarg宏定义来反问一个函数的参数表，参数列表的末尾会用省略号省略。</p>
+<p><strong>宏：</strong></p>
+<p>void va_start(va_list ap,last_arg)：用va_arg和va_end宏初始化参数ap，last_arg是传给函数的固定参数的最后一个，省略号之前的那个参数，注意va_start必须在va_arg和va_end之前调用;</p>
+<p>type va_arg(va_list ap,type)：用type类型扩展到参数表的下个参数，注意，ap必须用va_start初始化，如果没有下一个参数，结果会是undefined;</p>
+<p>void va_end(va_list ap)：允许一个有参数表（使用va_start宏）的函数返回，如果返回之前没有调用va_end，结果会是undefined。参数变量列表可能不再使用（在没调用va_staart的情况下va_end）;</p>
+<h2 id="11">11.<stddef.h>一些常数，类型和变量</h2>
+<p><stddef.h>定义了一些标准定义，许多定义宴会出现在其他的头文件里。</p>
+<p><strong>宏：</strong></p>
+<p>NULL：空指针的常量值;</p>
+<p>offsetof(type,member-designator)：返回一个结构提成员相对于结构体起始地址的偏移量（以字节为单位），type是结构体的名字，member-designator是结构体成员的名字;</p>
+<p><strong>变量和定义：</strong></p>
+<p>typedef ptrdiff_t：两个指针相减的结果;</p>
+<p>typedef size_t：是sizeof一个关键词得到的无符号整数值;</p>
+<p>typedef wchar_t：一个宽字符常量的大小，是整数类型;</p>
+<h2 id="12">12.<stdio.h>输入和输出</h2>
+<p><stdio.h>定义了用于输入和输出的函数、类型和宏。</p>
+<p><strong>变量：</strong></p>
+<p>typedef FILE：用于声明文件指针;</p>
+<p>typedef size_t：是由sizeof产生的无符号整数类型;</p>
+<p>typedef fpos_t：能够唯一说明文件中的每个位置的对象;</p>
+<p><strong>常量：</strong></p>
+<p>NULL：空值;</p>
+<p>_IOFBF：表示完全缓冲;</p>
+<p>_IOLBF：表示线缓冲;</p>
+<p>_IONBF：表示无缓冲;</p>
+<p>BUFSIZ：setbuf函数所使用的缓冲区的大小;</p>
+<p>EOF：EOF是负整数，表示END OF FILE</p>
+<p>FOPEN_MAX：同时打开的文件的最大数量;</p>
+<p>FILENAME_MAX：文件名的最大长度;</p>
+<p>L_tempnam：整数，最大长度的临时文件名;</p>
+<p>SEEK_CUR：取得目前文件位置;</p>
+<p>SEEK_END：将读写位置移到文件末尾;</p>
+<p>SEEK_SET：将读写位置移到文件开头;</p>
+<p>TMP_MAX：tmpnam最多次数;</p>
+<p>stderr：标准错误流，默认为屏幕，可输出到文件;</p>
+<p>stdin：标准输入流，默认为键盘;</p>
+<p>stdout：标准输出流，默认为屏幕;</p>
+<p><strong>函数：</strong></p>
+<p>clearerr()：复位错误标志;</p>
+<p>fclose()：关闭一个文件流;</p>
+<p>feof()：检测文件结束符;</p>
+<p>ferror()：检查流是否有错误;</p>
+<p>fflush()：更新缓冲区;</p>
+<p>fgetpos()：移动文件流的读写位置;</p>
+<p>fopen()：打开文件;</p>
+<p>fread()：从文件流读取数据;</p>
+<p>freopen()：打开文件;</p>
+<p>fseek()：移动文件流的读写位置;</p>
+<p>fsetpos()：定位流上的文件指针;</p>
+<p>ftell()：取得文件流的读取位置;</p>
+<p>fwrite()：将数据写至文件流;</p>
+<p>remove()：删除文件;</p>
+<p>rename()：更改文件名称或位置;</p>
+<p>rewind()：重设读取目录的位置为开头位置;</p>
+<p>setbuf()：把缓冲区与流相联;</p>
+<p>setvbuf()：把缓冲区与流相联;</p>
+<p>tmpfile()：以wb+形式创建一个临时二进制文件;</p>
+<p>tmpnam()：产生一个唯一的文件名;</p>
+<p>fprintf()：格式化输出数据至文件;</p>
+<p>fscanf()：格式化字符串输入;</p>
+<p>printf()：格式化输出数据;</p>
+<p>scanf()：格式化输入函数;</p>
+<p>sprintf()：格式化字符串复制;</p>
+<p>sscanf()：格式化字符串输入;</p>
+<p>vfprintf()：格式化输出数据至文件;</p>
+<p>vprintf()：格式化输出数据;</p>
+<p>vsprintf()：格式化字符串复制;</p>
+<p>fgetc()：由文件中读取一个字符;</p>
+<p>fgets()：文件中读取一字符串;</p>
+<p>fputc()：将一指定字符写入文件流中;</p>
+<p>fputs()：将一指定的字符串写入文件内;</p>
+<p>getc()：由文件中读取一个字符;</p>
+<p>getchar()：由标准输入设备内读进一个字符;</p>
+<p>gets()：由标准输入设备内读进一个字符串;</p>
+<p>putc()：将一指定字符写入文件中;</p>
+<p>putchar()：将指定的字符写道标准内输出设备;</p>
+<p>puts()：送一字符串到流stdout中;</p>
+<p>ungetc()：将指定字符写回文件流中;</p>
+<p>perror()：打印出错误原因信息字符串;</p>
 </div>
 
         </div>
