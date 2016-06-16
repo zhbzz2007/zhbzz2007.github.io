@@ -188,61 +188,61 @@ localeconv函数：用于返回当前区域中的数字和货币信息（保存�
 
 **三角函数：**
 
-double sin(double x)：正弦
+double sin(double x)：正弦;
 
-double cos(double x)：余弦
+double cos(double x)：余弦;
 
-double tan(double x)：正切
+double tan(double x)：正切;
 
 **反三角函数：**
 
-double asin(double x)：反正弦，结果介于[-PI/2,PI/2]
+double asin(double x)：反正弦，结果介于[-PI/2,PI/2];
 
-double acos(double x)：反余弦，结果介于[0,PI]
+double acos(double x)：反余弦，结果介于[0,PI];
 
-double atan(double x)：反正切（主值），结果介于[-PI/2,PI/2]
+double atan(double x)：反正切（主值），结果介于[-PI/2,PI/2];
 
-double atan2(double y,double)：反正切（整圆值），结果介于[-PI，PI]
+double atan2(double y,double)：反正切（整圆值），结果介于[-PI，PI];
 
 **双曲三角函数：**
 
-double sinh(double x)：计算双曲正弦
+double sinh(double x)：计算双曲正弦;
 
-double cosh(double x)：计算双曲余弦
+double cosh(double x)：计算双曲余弦;
 
-double tanh(double x)：计算双曲正切
+double tanh(double x)：计算双曲正切;
 
 **指数和对数：**
 
-double exp(double x)：求取自然数e的幂
+double exp(double x)：求取自然数e的幂;
 
-double sqrt(double x)：开平方
+double sqrt(double x)：开平方;
 
-double log(double x)：以e为底的对数
+double log(double x)：以e为底的对数;
 
-double log10(double x)：以10为底的对数
+double log10(double x)：以10为底的对数;
 
-double pow(double x,double y)：计算以x为底的y次幂
+double pow(double x,double y)：计算以x为底的y次幂;
 
-float powf(float x,float y)：与pow一致，输入与输出皆为浮点数
+float powf(float x,float y)：与pow一致，输入与输出皆为浮点数;
 
 **取整：**
 
-double ceil(double x)：向上取整
+double ceil(double x)：向上取整;
 
-double floor(double x)：向下取整
+double floor(double x)：向下取整;
 
 **标准化浮点数：**
 
-double frexq(double f,int \*p)：标准化浮点数，f = x * 2^p，已知f求x，p（x介于[0.5,1]）
+double frexq(double f,int \*p)：标准化浮点数，f = x * 2^p，已知f求x，p（x介于[0.5,1]）;
 
-double ldexp(double x,int p)：与frexp相反，已知x，p求f
+double ldexp(double x,int p)：与frexp相反，已知x，p求f;
 
 **取整与取余：**
 
-double modf(double x,double \*y)：将参数的整数部分通过指针回传，返回小数部分
+double modf(double x,double \*y)：将参数的整数部分通过指针回传，返回小数部分;
 
-double fmod(double x,double y)：返回两个参数相除的余数
+double fmod(double x,double y)：返回两个参数相除的余数;
 
 ## 8.<setjmp.h>非局部跳转 ##
 
@@ -260,31 +260,31 @@ longjmp(jmp_buf env,int retval)：跳转，利用setjmp设置的env变量进行�
 
 typedef sig_atomic_t
 
-sig_atomic_t：类型是int类型，用于接受signal函数的返回值
+sig_atomic_t：类型是int类型，用于接受signal函数的返回值;
 
 **宏：**
 
 以SIG_开头的宏用于定义信号处理函数，
 
-SIG_DFL：默认信号处理函数
+SIG_DFL：默认信号处理函数;
 
-SIG_ERR：表示一个错误信号，当signal函数调用失败时的返回值
+SIG_ERR：表示一个错误信号，当signal函数调用失败时的返回值;
 
-SIG_IGN：信号处理函数，表示忽略该信号
+SIG_IGN：信号处理函数，表示忽略该信号;
 
 SIG开头的宏是用来在下列情况下，用于表示一个信号代码，
 
-SIGABRT：异常中止（abort函数产生）
+SIGABRT：异常中止（abort函数产生）;
 
-SIGFPE：浮点错误（0作为除数产生的错误，非法的操作）
+SIGFPE：浮点错误（0作为除数产生的错误，非法的操作）;
 
-SIGILL：非法错误（指令）
+SIGILL：非法错误（指令）;
 
-SIGINT：交互式操作产生的信号（如CRTL+C）
+SIGINT：交互式操作产生的信号（如CRTL+C）;
 
-SIGSEGV：无效访问存储（片段的非法访问，内存非法访问）
+SIGSEGV：无效访问存储（片段的非法访问，内存非法访问）;
 
-SIGTERM：终止请求
+SIGTERM：终止请求;
 
 **函数：**
 
@@ -302,4 +302,170 @@ void (\*signal(int sig,void (\*func)(int))) (int):sig表示一个信号代码，
 
 int raise(int sig)：发送一个sig，信号参数为SIG开头的宏。
 
-如果调用成功，返回0,否则返回一个非零值。
+如果调用成功，返回0，否则返回一个非零值。
+
+
+## 10.<stdarg.h>可变参数 ##
+
+<stdarg.h>定义了一些宏，当函数参数未知时去获取函数的参数。
+
+**变量：**
+
+typedef va_list：通过stdarg宏定义来反问一个函数的参数表，参数列表的末尾会用省略号省略。
+
+**宏：**
+
+void va_start(va_list ap,last_arg)：用va_arg和va_end宏初始化参数ap，last_arg是传给函数的固定参数的最后一个，省略号之前的那个参数，注意va_start必须在va_arg和va_end之前调用;
+
+type va_arg(va_list ap,type)：用type类型扩展到参数表的下个参数，注意，ap必须用va_start初始化，如果没有下一个参数，结果会是undefined;
+
+void va_end(va_list ap)：允许一个有参数表（使用va_start宏）的函数返回，如果返回之前没有调用va_end，结果会是undefined。参数变量列表可能不再使用（在没调用va_staart的情况下va_end）;
+
+## 11.<stddef.h>一些常数，类型和变量 ##
+
+<stddef.h>定义了一些标准定义，许多定义宴会出现在其他的头文件里。
+
+**宏：**
+
+NULL：空指针的常量值;
+
+offsetof(type,member-designator)：返回一个结构提成员相对于结构体起始地址的偏移量（以字节为单位），type是结构体的名字，member-designator是结构体成员的名字;
+
+**变量和定义：**
+
+typedef ptrdiff_t：两个指针相减的结果;
+
+typedef size_t：是sizeof一个关键词得到的无符号整数值;
+
+typedef wchar_t：一个宽字符常量的大小，是整数类型;
+
+
+## 12.<stdio.h>输入和输出 ##
+
+<stdio.h>定义了用于输入和输出的函数、类型和宏。
+
+**变量：**
+
+typedef FILE：用于声明文件指针;
+
+typedef size_t：是由sizeof产生的无符号整数类型;
+
+typedef fpos_t：能够唯一说明文件中的每个位置的对象;
+
+**常量：**
+
+NULL：空值;
+
+\_IOFBF：表示完全缓冲;
+
+\_IOLBF：表示线缓冲;
+
+\_IONBF：表示无缓冲;
+
+BUFSIZ：setbuf函数所使用的缓冲区的大小;
+
+EOF：EOF是负整数，表示END OF FILE
+
+FOPEN_MAX：同时打开的文件的最大数量;
+
+FILENAME_MAX：文件名的最大长度;
+
+L_tempnam：整数，最大长度的临时文件名;
+
+SEEK_CUR：取得目前文件位置;
+
+SEEK_END：将读写位置移到文件末尾;
+
+SEEK_SET：将读写位置移到文件开头;
+
+TMP_MAX：tmpnam最多次数;
+
+stderr：标准错误流，默认为屏幕，可输出到文件;
+
+stdin：标准输入流，默认为键盘;
+
+stdout：标准输出流，默认为屏幕;
+
+**函数：**
+
+clearerr()：复位错误标志;
+
+fclose()：关闭一个文件流;
+
+feof()：检测文件结束符;
+
+ferror()：检查流是否有错误;
+
+fflush()：更新缓冲区;
+
+fgetpos()：移动文件流的读写位置;
+
+fopen()：打开文件;
+
+fread()：从文件流读取数据;
+
+freopen()：打开文件;
+
+fseek()：移动文件流的读写位置;
+
+fsetpos()：定位流上的文件指针;
+
+ftell()：取得文件流的读取位置;
+
+fwrite()：将数据写至文件流;
+
+remove()：删除文件;
+
+rename()：更改文件名称或位置;
+
+rewind()：重设读取目录的位置为开头位置;
+
+setbuf()：把缓冲区与流相联;
+
+setvbuf()：把缓冲区与流相联;
+
+tmpfile()：以wb+形式创建一个临时二进制文件;
+
+tmpnam()：产生一个唯一的文件名;
+
+fprintf()：格式化输出数据至文件;
+
+fscanf()：格式化字符串输入;
+
+printf()：格式化输出数据;
+
+scanf()：格式化输入函数;
+
+sprintf()：格式化字符串复制;
+
+sscanf()：格式化字符串输入;
+
+vfprintf()：格式化输出数据至文件;
+
+vprintf()：格式化输出数据;
+
+vsprintf()：格式化字符串复制;
+
+fgetc()：由文件中读取一个字符;
+
+fgets()：文件中读取一字符串;
+
+fputc()：将一指定字符写入文件流中;
+
+fputs()：将一指定的字符串写入文件内;
+
+getc()：由文件中读取一个字符;
+
+getchar()：由标准输入设备内读进一个字符;
+
+gets()：由标准输入设备内读进一个字符串;
+
+putc()：将一指定字符写入文件中;
+
+putchar()：将指定的字符写道标准内输出设备;
+
+puts()：送一字符串到流stdout中;
+
+ungetc()：将指定字符写回文件流中;
+
+perror()：打印出错误原因信息字符串;
