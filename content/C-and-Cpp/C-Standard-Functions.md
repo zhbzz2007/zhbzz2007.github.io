@@ -469,3 +469,208 @@ puts()：送一字符串到流stdout中;
 ungetc()：将指定字符写回文件流中;
 
 perror()：打印出错误原因信息字符串;
+
+
+## 13.stdlib.h 实用功能 ##
+
+stdlib.h 包含了C语言中最常用的函数。
+
+**宏：**
+
+NULL：空
+
+EXIT_FAILURE：失败状态码;
+
+EXIT_SUCCESS：成功状态码;
+
+RAND_MAX：rand的最大返回值;
+
+MB_CUR_MAX：多字节字符中的最大字节数;
+
+**变量：**
+
+typedef size_t：是unsigned integer类型;
+
+typedef wchar_t：一个宽字符的大小;
+
+struct div_t：是结构体类型 作为div函数的返回类型;
+
+struct ldiv_t：是结构体类型 作为ldiv函数的返回类型;
+
+**函数：**
+
+
+字符串函数：
+
+atof：将字符转换成浮点数;
+
+atoi：将字符转换成整数;
+
+strtod：将字符串转换成浮点数;
+
+strtol：将字符串转换成长整型数;
+
+strtoul：将字符串转换成无符号长整型数;
+
+内存控制函数：
+
+calloc：配置内存空间;
+
+free：释放原先配置的内存;
+
+malloc：配置内存空间;
+
+realloc：重新分配主存;
+
+环境函数：
+
+abort：异常终止一个进程;
+
+atexit：设置程序正常结束前调用的函数;
+
+exit：正常结束进程;
+
+getenv：取得环境变量内容;
+
+system：执行shell命令;
+
+搜索和排序函数：
+
+bsearch：二分搜索;
+
+qsort：利用快速排序法排列数组;
+
+数学函数：
+
+abs：计算整数的绝对值;
+
+div：将两个整数相处，返回商和余数;
+
+labs：取长整型绝对值;
+
+ldiv：两个长整型数相除，返回商和余数;
+
+rand：随机数发生器;
+
+srand：设置随机数种子;
+
+多字节函数：
+
+mblen：根据locale的设置，确定字符的字节数;
+
+mbstowcs：把多字节字符串转换为宽字符串;
+
+mbtowc：把多字节字符转换成为宽字符;
+
+wcstombs：把宽字符串转换为多字节字符串;
+
+wctomb：把宽字符转换为多字节字符;
+
+## 14.string.h 字符串函数 ##
+
+string.h 包含了C语言最常用的字符串操作函数。
+
+**宏：**
+
+NULL
+
+**变量：**
+
+typedef size_t
+
+**函数：**
+
+memchr：在某一内存返回中查找一特定字符;
+
+memcmp：比较内存内容;
+
+memcpy：拷贝内存内容;
+
+memmove：拷贝内存内容;
+
+memset：将一段内存空间填入空值;
+
+strcat：连接两字符串;
+
+strncat：连接两字符串;
+
+strchr：查找字符串中第一个出现的指定字符;
+
+strcmp：比较字符串;
+
+strncmp：比较两个字符串的前N个字符;
+
+strcoll：采用目前区域的字符排列比较字符串;
+
+strcpy：拷贝字符串;
+
+strncpy：拷贝字符串;
+
+strcspn：返回字符连续不含指定字符的字符数;
+
+strerror：返回错误原因的描述字符串;
+
+strlen：计算字符串长度;
+
+strpbrk：查找字符串中第一个出现的指定字符;
+
+strrchr：查找字符串中最后出现的指定字符;
+
+strcspn：返回字符串连续不含指定字符的字符数;
+
+strstr：在一字符串中查找指定的字符串;
+
+strtok：分割字符串;
+
+strxfrm：转换字符串;
+
+## 15.time.h 时间和日期函数 ##
+
+time.h 是C语言标准函数库中获取时间和日期、对时间与日期数据操作及格式化的头文件。
+
+**宏：**
+
+NULL:null是一个null指针常量的值;
+
+CLOCK_PER_SEC：每秒的时钟数;
+
+**变量：**
+
+typedef size_t：类型定义;
+
+typedef clock_t：类型定义;
+
+struct tm：结构体;
+
+    struct tm
+    {
+        int tm_sec;//秒,[0,59];
+        int tm_min;//分,[0,59];
+        int tm_hour;时,[0,23];
+        int tm_mday;//一个月中的日期，[1,31];
+        int tm_mon;//月份，[0,11];
+        int tm_year;//年份，实际年份-1900;
+        int tm_wday;//星期，[0,6];
+        int tm_yday;//从每年的1月1号开始的天数,取值[0,365];
+        int tm_isdst;//夏令时标识符，实行夏令时，为正;不实行时，为0;不了解情况时，为负;
+    }
+
+**函数：**
+
+asctime：将时间和日期以字符串格式表示;
+
+clock：确定处理器时间;
+
+ctime：把日期和时间转换为字符串;
+
+difftime：计算两个时刻之间的时间差;
+
+gmtime：把日期和时间转换为(GMT)时间;
+
+localtime：取得当地目前时间和日期;
+
+mktime：将时间结构数据转换成经过的秒数;
+
+strftime：将时间格式化;
+
+time：取得目前的时间;
