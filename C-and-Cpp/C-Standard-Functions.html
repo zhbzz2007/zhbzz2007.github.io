@@ -266,6 +266,116 @@
 <p>puts()：送一字符串到流stdout中;</p>
 <p>ungetc()：将指定字符写回文件流中;</p>
 <p>perror()：打印出错误原因信息字符串;</p>
+<h2 id="13stdlibh">13.stdlib.h 实用功能</h2>
+<p>stdlib.h 包含了C语言中最常用的函数。</p>
+<p><strong>宏：</strong></p>
+<p>NULL：空</p>
+<p>EXIT_FAILURE：失败状态码;</p>
+<p>EXIT_SUCCESS：成功状态码;</p>
+<p>RAND_MAX：rand的最大返回值;</p>
+<p>MB_CUR_MAX：多字节字符中的最大字节数;</p>
+<p><strong>变量：</strong></p>
+<p>typedef size_t：是unsigned integer类型;</p>
+<p>typedef wchar_t：一个宽字符的大小;</p>
+<p>struct div_t：是结构体类型 作为div函数的返回类型;</p>
+<p>struct ldiv_t：是结构体类型 作为ldiv函数的返回类型;</p>
+<p><strong>函数：</strong></p>
+<p>字符串函数：</p>
+<p>atof：将字符转换成浮点数;</p>
+<p>atoi：将字符转换成整数;</p>
+<p>strtod：将字符串转换成浮点数;</p>
+<p>strtol：将字符串转换成长整型数;</p>
+<p>strtoul：将字符串转换成无符号长整型数;</p>
+<p>内存控制函数：</p>
+<p>calloc：配置内存空间;</p>
+<p>free：释放原先配置的内存;</p>
+<p>malloc：配置内存空间;</p>
+<p>realloc：重新分配主存;</p>
+<p>环境函数：</p>
+<p>abort：异常终止一个进程;</p>
+<p>atexit：设置程序正常结束前调用的函数;</p>
+<p>exit：正常结束进程;</p>
+<p>getenv：取得环境变量内容;</p>
+<p>system：执行shell命令;</p>
+<p>搜索和排序函数：</p>
+<p>bsearch：二分搜索;</p>
+<p>qsort：利用快速排序法排列数组;</p>
+<p>数学函数：</p>
+<p>abs：计算整数的绝对值;</p>
+<p>div：将两个整数相处，返回商和余数;</p>
+<p>labs：取长整型绝对值;</p>
+<p>ldiv：两个长整型数相除，返回商和余数;</p>
+<p>rand：随机数发生器;</p>
+<p>srand：设置随机数种子;</p>
+<p>多字节函数：</p>
+<p>mblen：根据locale的设置，确定字符的字节数;</p>
+<p>mbstowcs：把多字节字符串转换为宽字符串;</p>
+<p>mbtowc：把多字节字符转换成为宽字符;</p>
+<p>wcstombs：把宽字符串转换为多字节字符串;</p>
+<p>wctomb：把宽字符转换为多字节字符;</p>
+<h2 id="14stringh">14.string.h 字符串函数</h2>
+<p>string.h 包含了C语言最常用的字符串操作函数。</p>
+<p><strong>宏：</strong></p>
+<p>NULL</p>
+<p><strong>变量：</strong></p>
+<p>typedef size_t</p>
+<p><strong>函数：</strong></p>
+<p>memchr：在某一内存返回中查找一特定字符;</p>
+<p>memcmp：比较内存内容;</p>
+<p>memcpy：拷贝内存内容;</p>
+<p>memmove：拷贝内存内容;</p>
+<p>memset：将一段内存空间填入空值;</p>
+<p>strcat：连接两字符串;</p>
+<p>strncat：连接两字符串;</p>
+<p>strchr：查找字符串中第一个出现的指定字符;</p>
+<p>strcmp：比较字符串;</p>
+<p>strncmp：比较两个字符串的前N个字符;</p>
+<p>strcoll：采用目前区域的字符排列比较字符串;</p>
+<p>strcpy：拷贝字符串;</p>
+<p>strncpy：拷贝字符串;</p>
+<p>strcspn：返回字符连续不含指定字符的字符数;</p>
+<p>strerror：返回错误原因的描述字符串;</p>
+<p>strlen：计算字符串长度;</p>
+<p>strpbrk：查找字符串中第一个出现的指定字符;</p>
+<p>strrchr：查找字符串中最后出现的指定字符;</p>
+<p>strcspn：返回字符串连续不含指定字符的字符数;</p>
+<p>strstr：在一字符串中查找指定的字符串;</p>
+<p>strtok：分割字符串;</p>
+<p>strxfrm：转换字符串;</p>
+<h2 id="15timeh">15.time.h 时间和日期函数</h2>
+<p>time.h 是C语言标准函数库中获取时间和日期、对时间与日期数据操作及格式化的头文件。</p>
+<p><strong>宏：</strong></p>
+<p>NULL:null是一个null指针常量的值;</p>
+<p>CLOCK_PER_SEC：每秒的时钟数;</p>
+<p><strong>变量：</strong></p>
+<p>typedef size_t：类型定义;</p>
+<p>typedef clock_t：类型定义;</p>
+<p>struct tm：结构体;</p>
+<div class="hlcode"><pre><span class="k">struct</span> <span class="n">tm</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">tm_sec</span><span class="p">;</span><span class="c1">//秒,[0,59];</span>
+    <span class="kt">int</span> <span class="n">tm_min</span><span class="p">;</span><span class="c1">//分,[0,59];</span>
+    <span class="kt">int</span> <span class="n">tm_hour</span><span class="p">;</span><span class="err">时</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">23</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">tm_mday</span><span class="p">;</span><span class="c1">//一个月中的日期，[1,31];</span>
+    <span class="kt">int</span> <span class="n">tm_mon</span><span class="p">;</span><span class="c1">//月份，[0,11];</span>
+    <span class="kt">int</span> <span class="n">tm_year</span><span class="p">;</span><span class="c1">//年份，实际年份-1900;</span>
+    <span class="kt">int</span> <span class="n">tm_wday</span><span class="p">;</span><span class="c1">//星期，[0,6];</span>
+    <span class="kt">int</span> <span class="n">tm_yday</span><span class="p">;</span><span class="c1">//从每年的1月1号开始的天数,取值[0,365];</span>
+    <span class="kt">int</span> <span class="n">tm_isdst</span><span class="p">;</span><span class="c1">//夏令时标识符，实行夏令时，为正;不实行时，为0;不了解情况时，为负;</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><strong>函数：</strong></p>
+<p>asctime：将时间和日期以字符串格式表示;</p>
+<p>clock：确定处理器时间;</p>
+<p>ctime：把日期和时间转换为字符串;</p>
+<p>difftime：计算两个时刻之间的时间差;</p>
+<p>gmtime：把日期和时间转换为(GMT)时间;</p>
+<p>localtime：取得当地目前时间和日期;</p>
+<p>mktime：将时间结构数据转换成经过的秒数;</p>
+<p>strftime：将时间格式化;</p>
+<p>time：取得目前的时间;</p>
 </div>
 
         </div>
