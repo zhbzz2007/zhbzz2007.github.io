@@ -92,8 +92,15 @@ http://hyry.dip.jp/tech/book/page/scipynew/scipy-810-sparse.html#sparse
 
 http://blog.csdn.net/stereohomology/article/details/37657777
 
-##PS： ##
+## 序列化 ##
 
-注意一下序列化，参考链接：
+import pickle
+
+pickle.dump:将数据保存至本地;
+
+pickle.load：从本地加载数据，和原来的数据一样，不需要重新解析;
+
+
+参考链接：
 
 http://www.cnblogs.com/linyawen/archive/2012/03/22/2411381.html
