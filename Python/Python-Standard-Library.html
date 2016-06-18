@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>Python 常用标准库函数 - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Python">Python</a>&nbsp;»&nbsp;Python 常用标准库函数</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">Python 常用标准库函数</div>
+  <div id="content">
+  <h2 id="os">OS</h2>
+<p>OS标准库常用函数：</p>
+<p><strong>abort()：</strong> 立即终止python解释器运行，不返回任何值;</p>
+<p><strong>access(path,mode):</strong> 测试特定用户对path是否有特定的权限。</p>
+<p>文件的信息为：</p>
+<p>-rw-rw-r--  1 zhb zhb      525  5月 28 22:29 populations.txt</p>
+<p>代码：</p>
+<div class="hlcode"><pre><span class="n">fileName</span> <span class="o">=</span> <span class="s">&quot;populations.txt&quot;</span>
+<span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">access</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">F_OK</span><span class="p">)</span><span class="err">#测试文件是否存在</span>
+<span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">access</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">R_OK</span><span class="p">)</span><span class="err">#测试文件是否具有读权限</span>
+<span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">access</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">W_OK</span><span class="p">)</span><span class="err">#测试文件是否具有写权限</span>
+<span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">access</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">X_OK</span><span class="p">)</span><span class="err">#测试文件是否具有执行权限</span>
+</pre></div>
+
+
+<p>结果：</p>
+<div class="hlcode"><pre><span class="n">True</span>
+<span class="n">True</span>
+<span class="n">True</span>
+<span class="n">False</span>
+</pre></div>
+
+
+<p><strong>chdir():</strong> 修改当前工作目录到指定路径;</p>
+<p>代码：</p>
+<div class="hlcode"><pre><span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/home/zhb&quot;</span>
+<span class="n">os</span><span class="p">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
+</pre></div>
+
+
+<p>结果：</p>
+<div class="hlcode"><pre><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">zhb</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">work</span>
+<span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">zhb</span>
+</pre></div>
+
+
+<p><strong>chmod():</strong> 修改文件的获取权限;</p>
+<p>代码：</p>
+<div class="hlcode"><pre><span class="n">fileName</span> <span class="o">=</span> <span class="s">&quot;populations.txt&quot;</span>
+<span class="n">os</span><span class="p">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">W_OK</span><span class="p">)</span>
+</pre></div>
+
+
+<p>结果：</p>
+<div class="hlcode"><pre><span class="o">-------</span><span class="n">r</span><span class="o">--</span> <span class="mi">1</span> <span class="n">zhb</span> <span class="n">zhb</span> <span class="mi">525</span>  <span class="mi">5</span><span class="err">月</span> <span class="mi">28</span> <span class="mi">22</span><span class="o">:</span><span class="mi">29</span> <span class="n">populations</span><span class="p">.</span><span class="n">txt</span><span class="err">#执行前</span>
+
+<span class="o">--------</span><span class="n">w</span><span class="o">-</span> <span class="mi">1</span> <span class="n">zhb</span> <span class="n">zhb</span> <span class="mi">525</span>  <span class="mi">5</span><span class="err">月</span> <span class="mi">28</span> <span class="mi">22</span><span class="o">:</span><span class="mi">29</span> <span class="n">populations</span><span class="p">.</span><span class="n">txt</span><span class="err">#执行后</span>
+</pre></div>
+
+
+<p><strong>chown():</strong> 修改目录的用户id和所在组id;</p>
+<h2 id="_1">参考链接</h2>
+<p><a href="http://www.bkjia.com/ASPjc/1039843.html">670个常用的Python库和示例代码</a></p>
+<p><a href="http://www.zhihu.com/question/20501628">Python 常用的标准库以及第三方库有哪些？</a></p>
+<p><a href="https://github.com/vinta/awesome-python">Awesome Python</a></p>
+<p><a href="https://github.com/ziwang-com/zwpy_lst">中文版的python常用模块库清单</a></p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
