@@ -22,8 +22,213 @@
   <div id="content">
   <h2 id="os">OS</h2>
 <p>OS标准库常用函数：</p>
-<p><strong>abort()：</strong> 立即终止python解释器运行，不返回任何值;</p>
-<p><strong>access(path,mode):</strong> 测试特定用户对path是否有特定的权限。</p>
+<table>
+<thead>
+<tr>
+<th>模块名称</th>
+<th>函数名称</th>
+<th>主要作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>os</td>
+<td>abort</td>
+<td>立即终止python解释器运行，不返回任何值</td>
+</tr>
+<tr>
+<td>os</td>
+<td>access</td>
+<td>测试特定用户对path是否有特定的权限</td>
+</tr>
+<tr>
+<td>os</td>
+<td>chdir</td>
+<td>修改当前工作目录到指定路径</td>
+</tr>
+<tr>
+<td>os</td>
+<td>chmod</td>
+<td>修改文件的获取权限</td>
+</tr>
+<tr>
+<td>os</td>
+<td>chown</td>
+<td>修改目录的用户id和所在组id</td>
+</tr>
+<tr>
+<td>os</td>
+<td>chroot</td>
+<td>修改根目录到指定的目录</td>
+</tr>
+<tr>
+<td>os</td>
+<td>chroot</td>
+<td>关闭文件描述符</td>
+</tr>
+<tr>
+<td>os</td>
+<td>closerange(fd_low,fd_high)</td>
+<td>关闭所有的文件描述符，[fd_low,fd_high]，忽略错误</td>
+</tr>
+<tr>
+<td>os</td>
+<td>confstr(name)</td>
+<td>返回字符串形式的系统配置变量</td>
+</tr>
+<tr>
+<td>os</td>
+<td>ctermid</td>
+<td>返回当前进程所在的控制终端的名称</td>
+</tr>
+<tr>
+<td>os</td>
+<td>dup</td>
+<td>返回一个复制的文件描述符</td>
+</tr>
+<tr>
+<td>os</td>
+<td>dup2</td>
+<td>复制文件描述符</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execl</td>
+<td>执行参数列表中的可执行文件，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execle</td>
+<td>执行参数列表和环境中的可执行文件，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execlp</td>
+<td>执行$PATH中搜索的可执行文件，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execlpe</td>
+<td>执行$PATH中搜索的和环境中的可执行文件，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execv</td>
+<td>执行参数中的可执行路径，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execve</td>
+<td>执行参数中和环境中的可执行路径，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execvp</td>
+<td>执行参数列表中在$PATH中搜索的可执行文件，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>execvpe</td>
+<td>执行参数列表和环境中在$PATH中搜索的可执行文件，替代本进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fchdir</td>
+<td>修改给定文件描述的目录</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fchmod</td>
+<td>修改给定文件描述符的获取权限</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fchown</td>
+<td>修改给定文件描述符的用户id和所在组id</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fdatasync</td>
+<td>强制写入文件到磁盘中给定文件描述符</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fdopen</td>
+<td>返回一个链接文件描述符的文件对象</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fork</td>
+<td>复制一个子进程</td>
+</tr>
+<tr>
+<td>os</td>
+<td>forkpty</td>
+<td>复制一个新进程伴随着一个伪终端</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fpathconf</td>
+<td>返回给定文件描述符的限制名称</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fstat</td>
+<td>返回stat结果</td>
+</tr>
+<tr>
+<td>os</td>
+<td>fstatvfs</td>
+<td>返回statvfs结果</td>
+</tr>
+<tr>
+<td>os</td>
+<td>ftruncate</td>
+<td>一个文件截断为指定长度</td>
+</tr>
+<tr>
+<td>os</td>
+<td><strong>getcwd</strong></td>
+<td>返回当前工作目录的字符串表示形式</td>
+</tr>
+<tr>
+<td>os</td>
+<td>getcwdu</td>
+<td>返回当前工作目录的unicode字符串表示形式</td>
+</tr>
+<tr>
+<td>os</td>
+<td>getegid</td>
+<td>返回当前进程的有效的群组id</td>
+</tr>
+<tr>
+<td>os</td>
+<td>getenv</td>
+<td>返回环境变量，如果不存在，则返回None</td>
+</tr>
+<tr>
+<td>os</td>
+<td>geteuid</td>
+<td>返回当前进程的有效的用户id</td>
+</tr>
+<tr>
+<td>os</td>
+<td>getgid</td>
+<td>返回当前进程的群组id</td>
+</tr>
+<tr>
+<td>os</td>
+<td>getgroups</td>
+<td>返回进程的一组群组id</td>
+</tr>
+<tr>
+<td>os</td>
+<td>getloadavg</td>
+<td>返回系统中运行的进程数目，从最后1,5,15分钟，如果不能获得，则返回OSError</td>
+</tr>
+</tbody>
+</table>
+<p><strong>access(path,mode):</strong></p>
 <p>文件的信息为：</p>
 <p>-rw-rw-r--  1 zhb zhb      525  5月 28 22:29 populations.txt</p>
 <p>代码：</p>
@@ -43,8 +248,7 @@
 </pre></div>
 
 
-<p><strong>chdir():</strong> 修改当前工作目录到指定路径;</p>
-<p>代码：</p>
+<p><strong>chdir():</strong> 代码：</p>
 <div class="hlcode"><pre><span class="n">print</span> <span class="n">os</span><span class="p">.</span><span class="n">getcwd</span><span class="p">()</span>
 <span class="n">path</span> <span class="o">=</span> <span class="s">&quot;/home/zhb&quot;</span>
 <span class="n">os</span><span class="p">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -58,8 +262,7 @@
 </pre></div>
 
 
-<p><strong>chmod():</strong> 修改文件的获取权限;</p>
-<p>代码：</p>
+<p><strong>chmod():</strong> 代码：</p>
 <div class="hlcode"><pre><span class="n">fileName</span> <span class="o">=</span> <span class="s">&quot;populations.txt&quot;</span>
 <span class="n">os</span><span class="p">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">os</span><span class="p">.</span><span class="n">W_OK</span><span class="p">)</span>
 </pre></div>
@@ -72,7 +275,6 @@
 </pre></div>
 
 
-<p><strong>chown():</strong> 修改目录的用户id和所在组id;</p>
 <h2 id="_1">参考链接</h2>
 <p><a href="http://www.bkjia.com/ASPjc/1039843.html">670个常用的Python库和示例代码</a></p>
 <p><a href="http://www.zhihu.com/question/20501628">Python 常用的标准库以及第三方库有哪些？</a></p>
