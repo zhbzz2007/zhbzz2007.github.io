@@ -49,6 +49,32 @@ OS标准库常用函数：
 |os|getgid|返回当前进程的群组id|
 |os|getgroups|返回进程的一组群组id|
 |os|getloadavg|返回系统中运行的进程数目，从最后1,5,15分钟，如果不能获得，则返回OSError|
+|os|getlogin|返回实际登录名|
+|os|getpgid|调用系统getgpid()|
+|os|getpgrp|返回当前进程群组id|
+|os|**getpid**|返回当前进程id|
+|os|**getppid**|返回父亲进程id|
+|os|getresgid|获得当前进程真实、有效、已保存的群组id|
+|os|getresuid|获得当前进程真实、有效、已保存的用户id|
+|os|getsid|调用系统getsid()|
+|os|**getuid**|返回当前进程的用户id|
+|os|initgroups|调用系统initgroups()初始化群组获取列表，包括指定用户是一个成员，还有指定的群组id|
+|os|isatty|如果文件描述符fd是一个连接到副终端的打开的文件描述符，就返回True|
+|os|**kill**|通过信号，杀死一个进程|
+|os|**killgp**|通过信号，杀死一个进程群组|
+|os|lchown|修改路径的所有者和群组id为指定的数字uid和gid，不会返回相应的符号链接（区别于硬链接）|
+|os|link|产生到一个文件的硬链接|
+|os|**listdir**|以列表形式返回一个目录下所有的入口名称，列表中元素顺序是随机的|
+|os|**lseek**|设置一个文件描述符当前的位置，返回新的光标字节位置，从文件开始处开始|
+|os|lstat|类似于stat()，但是不会产生符号链接|
+|os|major|从原始设备数中提取中设备主数|
+|os|makedev|从主、从设备数中压缩为原始设备数|
+|os|**makedirs**|超级mkdir，创建叶子目录，以及所有中间的目录|
+|os|minor|从原始设备数中提取从设备数|
+|os|**mkdir**|创建一个目录|
+|os|mkfifo|创建一个FIFO，一个POSIX命名管道，用于进程间通信|
+|os|mknode|创建一个文件系统节点|
+
 
 **access(path,mode):**
 
