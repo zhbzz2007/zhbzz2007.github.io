@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>Ubuntu 14.04 64bit搭建spark单机版 - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Spark">Spark</a>&nbsp;»&nbsp;Ubuntu 14.04 64bit搭建spark单机版</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">Ubuntu 14.04 64bit搭建spark单机版</div>
+  <div id="content">
+  <p>主要用来记录Ubuntu 14.04 64bit操作系统下单机版本spark环境搭建。</p>
+<h2 id="1java">1.安装java</h2>
+<p>下载Linux版本的JDK压缩包，我下载的是jdk-7u79-linux-x64.tar.gz。</p>
+<p>输入如下命令：</p>
+<div class="hlcode"><pre><span class="n">chmod</span> <span class="mo">0755</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">7u79</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span><span class="err">#修改</span><span class="n">jdk</span><span class="err">压缩包的权限</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">7u79</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span><span class="err">#解压缩</span>
+<span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="err">#在</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="err">下新建</span><span class="n">jvm</span><span class="err">目录</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="o">-</span><span class="n">rf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">7u79</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="err">#将</span><span class="n">jdk</span><span class="err">文件拷贝到</span><span class="n">jvm</span><span class="err">目录</span>
+
+<span class="n">sudo</span> <span class="n">gedit</span> <span class="o">~/</span><span class="p">.</span><span class="n">profile</span>
+</pre></div>
+
+
+<p>在文件末尾加上，</p>
+<div class="hlcode"><pre><span class="n">export</span> <span class="n">JAVA_HOME</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">jdk1</span><span class="mf">.7.0</span><span class="n">_79</span><span class="o">/</span>
+</pre></div>
+
+
+<p>保存关闭后，输入，</p>
+<div class="hlcode"><pre><span class="n">source</span> <span class="o">~/</span><span class="p">.</span><span class="n">profile</span>
+</pre></div>
+
+
+<p>使用env命令查看JAVA_HOME的值，</p>
+<div class="hlcode"><pre><span class="n">env</span>
+</pre></div>
+
+
+<p>如果JAVA_HOME=/usr/lib/jvm/jdk1.7.0_79/，说明配置成功。</p>
+<p>将系统默认的jdk修改过来，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">java</span> <span class="n">java</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">jdk1</span><span class="mf">.7.0</span><span class="n">_79</span><span class="c1">//bin/java 300</span>
+
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">javac</span> <span class="n">javac</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">jvm</span><span class="o">/</span><span class="n">jdk1</span><span class="mf">.7.0</span><span class="n">_79</span><span class="c1">//bin/javac 300</span>
+
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">java</span>
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">javac</span>
+</pre></div>
+
+
+<p>输入java -version，看到如下信息，则说明安装了sun的jdk。</p>
+<div class="hlcode"><pre><span class="n">java</span> <span class="n">version</span> <span class="s">&quot;1.7.0_79&quot;</span>
+<span class="n">Java</span><span class="p">(</span><span class="n">TM</span><span class="p">)</span> <span class="n">SE</span> <span class="n">Runtime</span> <span class="n">Environment</span> <span class="p">(</span><span class="n">build</span> <span class="mf">1.7.0</span><span class="n">_79</span><span class="o">-</span><span class="n">b15</span><span class="p">)</span>
+<span class="n">Java</span> <span class="n">HotSpot</span><span class="p">(</span><span class="n">TM</span><span class="p">)</span> <span class="mi">64</span><span class="o">-</span><span class="n">Bit</span> <span class="n">Server</span> <span class="n">VM</span> <span class="p">(</span><span class="n">build</span> <span class="mf">24.79</span><span class="o">-</span><span class="n">b02</span><span class="p">,</span> <span class="n">mixed</span> <span class="n">mode</span><span class="p">)</span>
+</pre></div>
+
+
+<h2 id="2scala">2.安装scala</h2>
+<p>下载地址：http://scala-lang.org/download/</p>
+<p>选择最新的版本下载，我下载的是scala-2.11.8.tgz，</p>
+<div class="hlcode"><pre><span class="n">mv</span> <span class="n">scala</span><span class="o">-</span><span class="mf">2.11.8</span><span class="p">.</span><span class="n">tgz</span> <span class="o">~/</span><span class="n">install</span>
+<span class="n">chmod</span> <span class="mo">0755</span> <span class="n">scala</span><span class="o">-</span><span class="mf">2.11.8</span><span class="p">.</span><span class="n">tgz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">scala</span><span class="o">-</span><span class="mf">2.11.8</span><span class="p">.</span><span class="n">tgz</span>
+</pre></div>
+
+
+<p>配置环境，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">gedit</span> <span class="o">~/</span><span class="p">.</span><span class="n">profile</span>
+</pre></div>
+
+
+<p>添加如下配置，</p>
+<div class="hlcode"><pre><span class="n">export</span> <span class="n">SCALA_HOME</span><span class="o">=</span><span class="err">$</span><span class="n">HOME</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">scala</span><span class="o">-</span><span class="mf">2.11.8</span>
+<span class="n">export</span> <span class="n">PATH</span><span class="o">=</span><span class="err">$</span><span class="n">PATH</span><span class="o">:</span><span class="n">SCALA_HOME</span><span class="o">/</span><span class="n">bin</span><span class="o">:</span><span class="err">$</span><span class="n">HOME</span><span class="o">/</span><span class="n">bin</span>
+</pre></div>
+
+
+<p>然后输入scala，进入scala命令行说明scala安装正确，如下图所示。</p>
+<p><img alt="" src="http://i.imgur.com/6K9UQq0.png" /></p>
+<h2 id="3spark">3.安装spark</h2>
+<p>下载地址：http://spark.apache.org/downloads.html</p>
+<p>选择最新的版本下载，我下载的是spark-1.6.1-bin-hadoop2.6.tgz，</p>
+<div class="hlcode"><pre><span class="n">mv</span> <span class="n">spark</span><span class="o">-</span><span class="mf">1.6.1</span><span class="o">-</span><span class="n">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="mf">.6</span><span class="p">.</span><span class="n">tgz</span> <span class="o">~/</span><span class="n">install</span>
+<span class="n">chmod</span> <span class="mo">0755</span> <span class="n">spark</span><span class="o">-</span><span class="mf">1.6.1</span><span class="o">-</span><span class="n">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="mf">.6</span><span class="p">.</span><span class="n">tgz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">spark</span><span class="o">-</span><span class="mf">1.6.1</span><span class="o">-</span><span class="n">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="mf">.6</span><span class="p">.</span><span class="n">tgz</span>
+</pre></div>
+
+
+<p>配置环境，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">gedit</span> <span class="o">~/</span><span class="p">.</span><span class="n">profile</span>
+</pre></div>
+
+
+<p>添加如下配置，</p>
+<div class="hlcode"><pre><span class="n">export</span> <span class="n">SPARK_HOME</span><span class="o">=</span><span class="err">$</span><span class="n">HOME</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="mf">1.6.1</span><span class="o">-</span><span class="n">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="mf">.6</span>
+</pre></div>
+
+
+<p><strong>运行spark shell</strong></p>
+<div class="hlcode"><pre><span class="n">cd</span>  <span class="o">~/</span><span class="n">install</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="mf">1.6.1</span><span class="o">-</span><span class="n">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="mf">.6</span><span class="o">/</span><span class="n">conf</span>
+<span class="n">cp</span> <span class="n">spark</span><span class="o">-</span><span class="n">env</span><span class="p">.</span><span class="n">sh</span><span class="p">.</span><span class="n">template</span> <span class="n">spark</span><span class="o">-</span><span class="n">env</span><span class="p">.</span><span class="n">sh</span>
+<span class="n">sudo</span> <span class="n">gedit</span> <span class="n">spark</span><span class="o">-</span><span class="n">env</span><span class="p">.</span><span class="n">sh</span>
+</pre></div>
+
+
+<p>添加如下配置：</p>
+<div class="hlcode"><pre><span class="n">export</span> <span class="n">SPARK_MASTER_IP</span><span class="o">=</span><span class="mf">127.0.0.1</span>
+<span class="n">export</span> <span class="n">SPARK_LOCAL_IP</span><span class="o">=</span><span class="mf">127.0.0.1</span>
+</pre></div>
+
+
+<p>启动spark shell，</p>
+<div class="hlcode"><pre><span class="n">cd</span> <span class="o">~/</span><span class="n">install</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="mf">1.6.1</span><span class="o">-</span><span class="n">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="mf">.6</span><span class="o">/</span><span class="n">bin</span>
+<span class="p">.</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="n">shell</span><span class="err">#进入</span><span class="n">scala</span><span class="err">命令行</span>
+<span class="p">.</span><span class="o">/</span><span class="n">pyspark</span><span class="err">#进入</span><span class="n">python</span><span class="err">命令行</span>
+</pre></div>
+
+
+<p>就会看到spark启动的过程，如下图所示。</p>
+<p><img alt="" src="http://i.imgur.com/UbSmSyB.jpg" /></p>
+<h2 id="4">4.参考链接</h2>
+<p><a href="http://www.cnblogs.com/bluestorm/archive/2012/05/10/2493592.html">Ubuntu 12.04 中安装和配置 Java JDK</a></p>
+<p>《深入理解Spark-核心思想与源码剖析》耿嘉安著。</p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
