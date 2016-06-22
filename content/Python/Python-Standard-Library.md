@@ -8,9 +8,75 @@ date: 2016-06-18 13:47
 
 OS标准库常用函数：
 
-**abort()：** 立即终止python解释器运行，不返回任何值;
+| 模块名称 | 函数名称 |主要作用|
+|-------|--------|-------|
+|os|abort|立即终止python解释器运行，不返回任何值|
+|os|access|测试特定用户对path是否有特定的权限|
+|os|chdir|修改当前工作目录到指定路径|
+|os|chmod|修改文件的获取权限|
+|os|chown|修改目录的用户id和所在组id|
+|os|chroot|修改根目录到指定的目录|
+|os|chroot|关闭文件描述符|
+|os|closerange(fd_low,fd_high)|关闭所有的文件描述符，[fd_low,fd_high]，忽略错误|
+|os|confstr(name)|返回字符串形式的系统配置变量|
+|os|ctermid|返回当前进程所在的控制终端的名称|
+|os|dup|返回一个复制的文件描述符|
+|os|dup2|复制文件描述符|
+|os|execl|执行参数列表中的可执行文件，替代本进程|
+|os|execle|执行参数列表和环境中的可执行文件，替代本进程|
+|os|execlp|执行$PATH中搜索的可执行文件，替代本进程|
+|os|execlpe|执行$PATH中搜索的和环境中的可执行文件，替代本进程|
+|os|execv|执行参数中的可执行路径，替代本进程|
+|os|execve|执行参数中和环境中的可执行路径，替代本进程|
+|os|execvp|执行参数列表中在$PATH中搜索的可执行文件，替代本进程|
+|os|execvpe|执行参数列表和环境中在$PATH中搜索的可执行文件，替代本进程|
+|os|fchdir|修改给定文件描述的目录|
+|os|fchmod|修改给定文件描述符的获取权限|
+|os|fchown|修改给定文件描述符的用户id和所在组id|
+|os|fdatasync|强制写入文件到磁盘中给定文件描述符|
+|os|fdopen|返回一个链接文件描述符的文件对象|
+|os|fork|复制一个子进程|
+|os|forkpty|复制一个新进程伴随着一个伪终端|
+|os|fpathconf|返回给定文件描述符的限制名称|
+|os|fstat|返回stat结果|
+|os|fstatvfs|返回statvfs结果|
+|os|ftruncate|一个文件截断为指定长度|
+|os| **getcwd** |返回当前工作目录的字符串表示形式|
+|os|getcwdu|返回当前工作目录的unicode字符串表示形式|
+|os|getegid|返回当前进程的有效的群组id|
+|os|getenv|返回环境变量，如果不存在，则返回None|
+|os|geteuid|返回当前进程的有效的用户id|
+|os|getgid|返回当前进程的群组id|
+|os|getgroups|返回进程的一组群组id|
+|os|getloadavg|返回系统中运行的进程数目，从最后1,5,15分钟，如果不能获得，则返回OSError|
+|os|getlogin|返回实际登录名|
+|os|getpgid|调用系统getgpid()|
+|os|getpgrp|返回当前进程群组id|
+|os|**getpid**|返回当前进程id|
+|os|**getppid**|返回父亲进程id|
+|os|getresgid|获得当前进程真实、有效、已保存的群组id|
+|os|getresuid|获得当前进程真实、有效、已保存的用户id|
+|os|getsid|调用系统getsid()|
+|os|**getuid**|返回当前进程的用户id|
+|os|initgroups|调用系统initgroups()初始化群组获取列表，包括指定用户是一个成员，还有指定的群组id|
+|os|isatty|如果文件描述符fd是一个连接到副终端的打开的文件描述符，就返回True|
+|os|**kill**|通过信号，杀死一个进程|
+|os|**killgp**|通过信号，杀死一个进程群组|
+|os|lchown|修改路径的所有者和群组id为指定的数字uid和gid，不会返回相应的符号链接（区别于硬链接）|
+|os|link|产生到一个文件的硬链接|
+|os|**listdir**|以列表形式返回一个目录下所有的入口名称，列表中元素顺序是随机的|
+|os|**lseek**|设置一个文件描述符当前的位置，返回新的光标字节位置，从文件开始处开始|
+|os|lstat|类似于stat()，但是不会产生符号链接|
+|os|major|从原始设备数中提取中设备主数|
+|os|makedev|从主、从设备数中压缩为原始设备数|
+|os|**makedirs**|超级mkdir，创建叶子目录，以及所有中间的目录|
+|os|minor|从原始设备数中提取从设备数|
+|os|**mkdir**|创建一个目录|
+|os|mkfifo|创建一个FIFO，一个POSIX命名管道，用于进程间通信|
+|os|mknode|创建一个文件系统节点|
 
-**access(path,mode):** 测试特定用户对path是否有特定的权限。
+
+**access(path,mode):**
 
 文件的信息为：
 
@@ -31,9 +97,7 @@ OS标准库常用函数：
     True
     False
 
-**chdir():** 修改当前工作目录到指定路径;
-
-代码：
+**chdir():** 代码：
 
     print os.getcwd()
     path = "/home/zhb"
@@ -46,9 +110,7 @@ OS标准库常用函数：
     /home/zhb
 
 
-**chmod():** 修改文件的获取权限;
-
-代码：
+**chmod():** 代码：
 
     fileName = "populations.txt"
     os.chmod(fileName,os.W_OK)
@@ -58,8 +120,6 @@ OS标准库常用函数：
     -------r-- 1 zhb zhb 525  5月 28 22:29 populations.txt#执行前
 
     --------w- 1 zhb zhb 525  5月 28 22:29 populations.txt#执行后
-
-**chown():** 修改目录的用户id和所在组id;
 
 
 
