@@ -112,7 +112,30 @@ date: 2016-06-22 23:04
 
 ![](http://i.imgur.com/UbSmSyB.jpg)
 
-## 4.参考链接 ##
+##4.运行IPYTHON##
+
+**启动IPython**
+
+1,在SPARK主目录下运行如下命令，启动IPython，
+
+    IPYTHON=1 IPYTHON_OPTS="-pylab" ./bin/pyspark
+
+如图所示，
+
+![](http://images2015.cnblogs.com/blog/668850/201607/668850-20160703213345343-2121532560.png)
+
+**启动IPython Notebook**
+
+2.在SPARK主目录下运行如下命令，启动IPython Notebook，
+
+    IPYTHON=1 IPYTHON_OPTS=notebook ./bin/pyspark
+
+如图所示，
+
+![](http://images2015.cnblogs.com/blog/668850/201607/668850-20160703213351484-2007425375.png)
+
+
+## 5.参考链接 ##
 
 [Ubuntu 12.04 中安装和配置 Java JDK](http://www.cnblogs.com/bluestorm/archive/2012/05/10/2493592.html)
 
