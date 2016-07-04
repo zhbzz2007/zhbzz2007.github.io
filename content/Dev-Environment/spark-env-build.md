@@ -114,9 +114,7 @@ date: 2016-06-22 23:04
 
 ##4.运行IPYTHON##
 
-**启动IPython**
-
-1,在SPARK主目录下运行如下命令，启动IPython，
+**启动IPython** , 在SPARK主目录下运行如下命令,
 
     IPYTHON=1 IPYTHON_OPTS="-pylab" ./bin/pyspark
 
@@ -124,9 +122,7 @@ date: 2016-06-22 23:04
 
 ![](http://images2015.cnblogs.com/blog/668850/201607/668850-20160703213345343-2121532560.png)
 
-**启动IPython Notebook**
-
-2.在SPARK主目录下运行如下命令，启动IPython Notebook，
+**启动IPython Notebook** ,在SPARK主目录下运行如下命令，
 
     IPYTHON=1 IPYTHON_OPTS=notebook ./bin/pyspark
 
