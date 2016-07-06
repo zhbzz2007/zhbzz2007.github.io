@@ -8,45 +8,110 @@ date: 2016-06-07 17:12
 
 ###1.文件管理 ###
 
-1. touch
+1. cat
 
-    创建新文件。
+    查看文件内容；
 
-2. rm
+    输入：
 
-    删除文件。
+        cat 1.txt
 
-3. mv
+    输出：
 
-    移动文件。
+        Hello,Linux
+        I like Ubuntu
 
-4. cp
 
-    复制文件。
+2. chgrp
 
-5. whereis
+    修改文件或者目录所属的群组；
 
-    定位可执行文件、源码文件、帮助文件在文件系统中的位置。
+3. chmod
 
-6. which
+    修改文件或者目录的读写执行权限；
 
-    搜索某个系统命令的位置，返回第一个搜索结果。
+4. chown
 
-7. chown
+    修改文件或者目录的所有者；
 
-    修改文件所有者。
+5. cksum
 
-8. chmod
+    检查文件爱呢的CRC是否正确，确保文件从一个系统传输到另一个系统的过程中不被损坏；
 
-    修改文件读写权限。
+6. cmp
 
-9. chgrp
+    比较两个文件是否相同，如果相同，则不显示任何信息，如果不相同，则显示不相同的行数；
 
-    修改文件所在群组。
+    输入：
 
-10. find
+        cmp 1.txt 3.txt
 
-    查找。
+    输出：
+
+        1.txt 3.txt 不同：第 20 字节，第 2 行
+
+7. diff
+
+    比较两个文件的差异，如果没有差异，则不显示任何信息，如果有差异，则显示出有差异的地方；
+
+    输入：
+
+        diff 1.txt 3.txt
+
+    输出：
+
+        2c2,3
+        < I like Ubuntu
+        ---
+        > I like CentOS
+        >
+
+8. diffstat
+
+    读取diff的比较结果，显示统计数字；
+
+9. file
+
+    辨识文件文件的类型；
+
+    输入：
+
+        file test-c-function.out
+
+    输出：
+
+        test-c-function.out: ELF 64-bit LSB  executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.24, BuildID[sha1]=6caf20f3985526c5562abdd51d45a2a006536ba0, not stripped
+
+10. **find** (参数超级多，需要仔细研究)
+
+    查找；
+
+11. git,gitview
+
+12. indent
+
+    可辨识C原始代码文件，并加以格式化，以方便用户阅读；
+
+13. cut
+
+    负责剪切数据，以每一行为一个处理对象，这种机制和sed一样；
+
+    输入：
+
+        cat 1.txt | cut -c 5-10
+
+    输出：
+
+        o,Linu
+        ke Ubu
+
+14. ln
+
+    为一个文件在另一个位置建立一个同步的链接，最常用的参数是-s；
+
+15. less
+
+   对文件或者其他输出进行分页显示 ，PageUp键向上翻页，PageDown向下翻页，退出按Q键；
 
 ###2.磁盘管理 ###
 
@@ -149,3 +214,5 @@ date: 2016-06-07 17:12
 参考链接：
 
 [Linux常用命令全集](http://itlab.idcquan.com/linux/special/linuxcom/)
+
+[Linux教程](http://www.runoob.com/linux/linux-tutorial.html)

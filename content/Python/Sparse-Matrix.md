@@ -34,6 +34,23 @@ http://www.jb51.net/article/51609.htm
     [(0, 1), (1, 3)]
     [2.0, 3.0]
 
+设置对角矩阵，
+
+输入：
+
+    from scipy import sparse
+    a = sparse.dok_matrix((4,4))
+    a.setdiag(2)#设置值到对角元素上
+    print a.keys()
+    print a.values()
+
+输出：
+
+    [(3, 3), (0, 0), (1, 1), (2, 2)]
+    [2.0, 2.0, 2.0, 2.0]
+
+
+
 2）lil_matrix,使用两个列表保存非零元素，data保存每行中的非零元素，rows保存非零元素所在的列，适合逐个添加元素，并且能够快速获取行相关的数据。
 
 输入：
@@ -91,6 +108,8 @@ http://blog.csdn.net/pipisorry/article/details/41762945
 http://hyry.dip.jp/tech/book/page/scipynew/scipy-810-sparse.html#sparse
 
 http://blog.csdn.net/stereohomology/article/details/37657777
+
+http://scipy.github.io/devdocs/generated/scipy.sparse.dok_matrix.html#scipy.sparse.dok_matrix
 
 ## 序列化 ##
 
