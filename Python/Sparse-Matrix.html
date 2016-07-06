@@ -44,6 +44,22 @@
 </pre></div>
 
 
+<p>设置对角矩阵，</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">from</span> <span class="n">scipy</span> <span class="n">import</span> <span class="n">sparse</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">sparse</span><span class="p">.</span><span class="n">dok_matrix</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">a</span><span class="p">.</span><span class="n">setdiag</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="err">#设置值到对角元素上</span>
+<span class="n">print</span> <span class="n">a</span><span class="p">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="n">print</span> <span class="n">a</span><span class="p">.</span><span class="n">values</span><span class="p">()</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="k">[(3, 3), (0, 0), (1, 1), (2, 2)]</span>
+<span class="k">[2.0, 2.0, 2.0, 2.0]</span>
+</pre></div>
+
+
 <p>2）lil_matrix,使用两个列表保存非零元素，data保存每行中的非零元素，rows保存非零元素所在的列，适合逐个添加元素，并且能够快速获取行相关的数据。</p>
 <p>输入：</p>
 <div class="hlcode"><pre><span class="n">from</span> <span class="n">scipy</span> <span class="n">import</span> <span class="n">sparse</span>
@@ -94,6 +110,7 @@
 <p>http://blog.csdn.net/pipisorry/article/details/41762945</p>
 <p>http://hyry.dip.jp/tech/book/page/scipynew/scipy-810-sparse.html#sparse</p>
 <p>http://blog.csdn.net/stereohomology/article/details/37657777</p>
+<p>http://scipy.github.io/devdocs/generated/scipy.sparse.dok_matrix.html#scipy.sparse.dok_matrix</p>
 <h2 id="_1">序列化</h2>
 <p>import pickle</p>
 <p>pickle.dump:将数据保存至本地;</p>

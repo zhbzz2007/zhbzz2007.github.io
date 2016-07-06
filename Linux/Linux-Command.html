@@ -24,46 +24,121 @@
 <h3 id="1">1.文件管理</h3>
 <ol>
 <li>
-<p>touch</p>
-<p>创建新文件。</p>
-</li>
-<li>
-<p>rm</p>
-<p>删除文件。</p>
-</li>
-<li>
-<p>mv</p>
-<p>移动文件。</p>
-</li>
-<li>
-<p>cp</p>
-<p>复制文件。</p>
-</li>
-<li>
-<p>whereis</p>
-<p>定位可执行文件、源码文件、帮助文件在文件系统中的位置。</p>
-</li>
-<li>
-<p>which</p>
-<p>搜索某个系统命令的位置，返回第一个搜索结果。</p>
-</li>
-<li>
-<p>chown</p>
-<p>修改文件所有者。</p>
-</li>
-<li>
-<p>chmod</p>
-<p>修改文件读写权限。</p>
+<p>cat</p>
+<p>查看文件内容；</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">cat</span> <span class="mf">1.</span><span class="n">txt</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="n">Hello</span><span class="p">,</span><span class="n">Linux</span>
+<span class="n">I</span> <span class="n">like</span> <span class="n">Ubuntu</span>
+</pre></div>
+
+
 </li>
 <li>
 <p>chgrp</p>
-<p>修改文件所在群组。</p>
+<p>修改文件或者目录所属的群组；</p>
 </li>
 <li>
-<p>find</p>
-<p>查找。</p>
+<p>chmod</p>
+<p>修改文件或者目录的读写执行权限；</p>
+</li>
+<li>
+<p>chown</p>
+<p>修改文件或者目录的所有者；</p>
+</li>
+<li>
+<p>cksum</p>
+<p>检查文件爱呢的CRC是否正确，确保文件从一个系统传输到另一个系统的过程中不被损坏；</p>
+</li>
+<li>
+<p>cmp</p>
+<p>比较两个文件是否相同，如果相同，则不显示任何信息，如果不相同，则显示不相同的行数；</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">cmp</span> <span class="mf">1.</span><span class="n">txt</span> <span class="mf">3.</span><span class="n">txt</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="mf">1.</span><span class="n">txt</span> <span class="mf">3.</span><span class="n">txt</span> <span class="err">不同：第</span> <span class="mi">20</span> <span class="err">字节，第</span> <span class="mi">2</span> <span class="err">行</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>diff</p>
+<p>比较两个文件的差异，如果没有差异，则不显示任何信息，如果有差异，则显示出有差异的地方；</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="gh">diff 1.txt 3.txt</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="mi">2</span><span class="n">c2</span><span class="p">,</span><span class="mi">3</span>
+<span class="o">&lt;</span> <span class="n">I</span> <span class="n">like</span> <span class="n">Ubuntu</span>
+<span class="o">---</span>
+<span class="o">&gt;</span> <span class="n">I</span> <span class="n">like</span> <span class="n">CentOS</span>
+<span class="o">&gt;</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>diffstat</p>
+<p>读取diff的比较结果，显示统计数字；</p>
+</li>
+<li>
+<p>file</p>
+<p>辨识文件文件的类型；</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="nx">file</span> <span class="nx">test</span><span class="o">-</span><span class="nx">c</span><span class="o">-</span><span class="kd">function</span><span class="p">.</span><span class="nx">out</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="nx">test</span><span class="o">-</span><span class="nx">c</span><span class="o">-</span><span class="kd">function</span><span class="p">.</span><span class="nx">out</span><span class="o">:</span> <span class="nx">ELF</span> <span class="mi">64</span><span class="o">-</span><span class="nx">bit</span> <span class="nx">LSB</span>  <span class="nx">executable</span><span class="p">,</span> <span class="nx">x86</span><span class="o">-</span><span class="mi">64</span><span class="p">,</span> <span class="nx">version</span> <span class="mi">1</span> <span class="p">(</span><span class="nx">SYSV</span><span class="p">),</span> <span class="nx">dynamically</span> <span class="nx">linked</span> <span class="p">(</span><span class="nx">uses</span> <span class="nx">shared</span> <span class="nx">libs</span><span class="p">),</span> <span class="k">for</span> <span class="nx">GNU</span><span class="o">/</span><span class="nx">Linux</span> <span class="mf">2.6</span><span class="p">.</span><span class="mi">24</span><span class="p">,</span> <span class="nx">BuildID</span><span class="cp">[</span><span class="nx">sha1</span><span class="cp">]</span><span class="o">=</span><span class="mi">6</span><span class="nx">caf20f3985526c5562abdd51d45a2a006536ba0</span><span class="p">,</span> <span class="nx">not</span> <span class="nx">stripped</span>
+</pre></div>
+
+
+</li>
+<li>
+<p><strong>find</strong> (参数超级多，需要仔细研究)</p>
+<p>查找；</p>
+</li>
+<li>
+<p>git,gitview</p>
+</li>
+<li>
+<p>indent</p>
+<p>可辨识C原始代码文件，并加以格式化，以方便用户阅读；</p>
+</li>
+<li>
+<p>cut</p>
+<p>负责剪切数据，以每一行为一个处理对象，这种机制和sed一样；</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">cat</span> <span class="mf">1.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">cut</span> <span class="o">-</span><span class="n">c</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="n">o</span><span class="p">,</span><span class="n">Linu</span>
+<span class="n">ke</span> <span class="n">Ubu</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>ln</p>
+<p>为一个文件在另一个位置建立一个同步的链接，最常用的参数是-s；</p>
+</li>
+<li>
+<p>less</p>
 </li>
 </ol>
+<p>对文件或者其他输出进行分页显示 ，PageUp键向上翻页，PageDown向下翻页，退出按Q键；</p>
 <h3 id="2">2.磁盘管理</h3>
 <ol>
 <li>
@@ -153,6 +228,7 @@
 <h3 id="10">10.设备管理</h3>
 <p>参考链接：</p>
 <p><a href="http://itlab.idcquan.com/linux/special/linuxcom/">Linux常用命令全集</a></p>
+<p><a href="http://www.runoob.com/linux/linux-tutorial.html">Linux教程</a></p>
 </div>
 
         </div>
