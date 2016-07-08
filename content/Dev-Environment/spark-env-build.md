@@ -107,6 +107,7 @@ date: 2016-06-22 23:04
     cd ~/install/spark-1.6.1-bin-hadoop2.6/bin
     ./spark-shell#进入scala命令行
     ./pyspark#进入python命令行
+    spark-shell --driver-memory 2g #启动spark时，限定最大内存
 
 就会看到spark启动的过程，如下图所示。
 
