@@ -82,6 +82,8 @@ RDD是粗粒度的操作数据集，每个转换操作都会生成一个新的RD
 
     scala> shuffleRDD.dependencies
     res6: Seq[org.apache.spark.Dependency[_]] = List(org.apache.spark.ShuffleDependency@17d42714)
+    scala> val rdd = sc.makeRDD(collect)
+rdd: org.apache.spark.rdd.RDD[scala.collection.immutable.Range.Inclusive] = ParallelCollectionRDD[1] at makeRDD at <console>:29
 
 ### 1.4RDD分区计算(compute) ###
 
@@ -95,11 +97,113 @@ partitioner就是RDD分区函数，目前Spark实现了两种类型的分区函�
 
 ### 2.1集合创建操作 ###
 
+RDD的形成可以由内部集合类型来生成，Spark中提供了parallelize和makeRDD两类函数来实现从集合生成RDD，两个函数接口功能类似，不同的是makeRDD还提供了一个可以指定每一个分区preferredLocations参数的实现版本。
+
+    scala> val rdd = sc.makeRDD(1 to 10,3)
+    rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at makeRDD at <console>:27
+
+    scala> val collect = Seq((1 to 10,Seq("host1","host3")),(11 to 20,Seq("host2")))
+    collect: Seq[(scala.collection.immutable.Range.Inclusive, Seq[String])] = List((Range(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),List(host1, host3)), (Range(11, 12, 13, 14, 15, 16, 17, 18, 19, 20),List(host2)))
+
+    scala> val rdd = sc.makeRDD(collect)
+    rdd: org.apache.spark.rdd.RDD[scala.collection.immutable.Range.Inclusive] = ParallelCollectionRDD[1] at makeRDD at <console>:29
+
+    scala> rdd.preferredLocations(rdd.partitions(0))
+    res1: Seq[String] = List(host1, host3)
+
+    scala> rdd.preferredLocations(rdd.partitions(1))
+    res2: Seq[String] = List(host2)
+
+
 ### 2.2存储创建操作 ###
+
+Spark的整个生态系统与Hadoop是完全兼容的，对于Hadoop所支持的文件类型或者数据库类型，Spark也同样支持。hadoopRDD和newhadoopRDD是最为抽象的两个函数，主要包括以下四个参数：
+
+输入格式：指定数据输入的类型，如TextInputFormat;
+
+键类型：指定[K,V]键值对中K的类型;
+
+值类型：指定[K,V]键值对中V的类型;
+
+分区值：指定由外部存储生成的RDD的partition数量的最小值，如果没有指定，系统会使用默认值defaultMinSplits;
+
+兼容旧版本Hadoop API的创建操作，
+
+||文件路径|输入格式|键类型|值类型|分区值|
+|--|--|--|--|--|--|
+|textFile|path|TextInputFormat|LongWritable|Text|minSplits|
+|hadoopFile|path|F|K|V|minSplits|
+|hadoopFile|path|F|K|V|DefaultMinSplits|
+|sequenceFile|path|SequenceFileInputFormat|K|V|minSplits|
+|sequenceFile|path|SequenceFileInputFormat|K|V|DefaultMinSplits|
+|objectFile|path|SequenceFileInputFormat|NullWritable|BytesWritable|mminSplits|
+|hadoopRDD|n/a|inpurformatClass|keyClass|valueClass|minSplits|
+
+兼容新版本Hadoop API的创建操作，
+
+||文件路径|输入格式|键类型|值类型|分区值|
+|--|--|--|--|--|--|
+|newAPIHadoopFile|path|F|K|V|n/a|
+|newAPIHadoopFile|path|F|K|V|n/a|
+|newAPIHadoopRDD|path|F|K|V|n/a|
 
 ## 3.转换操作 ##
 
 ### 3.1RDD基本转换操作 ###
+
+map：将RDD中类型为T的元素，一对一映射为类型为U的元素。
+
+distinct：返回RDD中所有不一样的元素。
+
+flatMap：将RDD中的每一个元素进行一对多转换。
+
+    scala> val rdd = sc.makeRDD(1 to 5,1)
+    rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[2] at makeRDD at <console>:27
+
+    scala> val mapRDD = rdd.map(x => x.toFloat)
+    mapRDD: org.apache.spark.rdd.RDD[Float] = MapPartitionsRDD[3] at map at <console>:29
+
+    scala> mapRDD.collect()
+    res3: Array[Float] = Array(1.0, 2.0, 3.0, 4.0, 5.0)
+
+    scala> val flatMapRDD = rdd.flatMap(x => (1 to x))
+    flatMapRDD: org.apache.spark.rdd.RDD[Int] = MapPartitionsRDD[4] at flatMap at <console>:29
+
+    scala> flatMapRDD.collect()
+    res4: Array[Int] = Array(1, 1, 2, 1, 2, 3, 1, 2, 3, 4, 1, 2, 3, 4, 5)
+
+    scala> val distinctRDD = flatMapRDD.distinct()
+    distinctRDD: org.apache.spark.rdd.RDD[Int] = MapPartitionsRDD[7] at distinct at <console>:31
+
+    scala> distinctRDD.collect()
+    res6: Array[Int] = Array(4, 1, 3, 5, 2)
+
+repartition：repartition只是coalesce接口中shuffle为true的简易实现。
+
+coalesce：主要讨论如何设置shuffle参数，这里分三种情况（假设RDD有N个分区，需要重新划分成M个分区）
+
+1. 如果N < M，一般情况下，N个分区有数据分布不均的状况，利用HashPartitioner函数将数据重新分区为M个，这时需要将shuffle参数设置为true；
+
+2. 如果N > M且N和M差不多(比如说N是1000,M是100)，那么就可以将N个分区中的若干个分区合并成一个新的分区，最终合并成M个分区，这时可以将shuffle参数设置为false(在shuffle为false的情况下，设置M > N，coalesce是不起作用的)，不进行shuffle过程，父RDD和子RDD之间是窄依赖关系；
+
+3. 如果N > M且N和M差距悬殊(比如说N是1000,M是1)，这个时候如果把shuffle参数设置为false，由于父子RDD是窄依赖，它们同处在一个Stage中，就可能会造成Spark程序运行的并行度不够，从而影响性能。比如在M为1时，由于只有1个分区，所以只会有一个任务在运行，为了使coalesce之前的操作有更好的并行度，可以将shuffle参数设置为true；
+
+
+randomSplit:根据weights权重将一个RDD切分成多个RDD；
+
+glom：将RDD中每一个分区中类型为T的元素转换成数组Array[T]，这样每一个分区就只有一个数组元素；
+
+union：将两个RDD集合中的数据进行合并，返回两个RDD的并集（包含两个RDD中相同的元素，不会去重）；
+
+intersection：返回两个RDD集合的交集，且交集中不会包含相同的元素；
+
+subtract：如果subtract针对的是A和B两个集合，即操作是val result = A.subtract(B)，那么result中将会包含A中出现且不在B中出现的元素；
+
+intersection和subtract一般情况下都会有shuffle的过程；
+
+mapPartitions：与map转换操作类似，只不过映射函数的输入参数由RDD中的每一个元素变成了RDD中每一个分区的迭代器；
+
+mapPartitionsWithIndex：与mapPartitions功能类似，只是输入参数多了一个分区的ID；
 
 zip：将两个RDD组合成Key/Value（键/值）形式的RDD，默认两个RDD的partition数量以及元素数量都相同，否则相同系统将会抛出异常。
 
