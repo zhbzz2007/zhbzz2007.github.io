@@ -310,7 +310,115 @@ res6: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">
 <p>zipWithIndex：是将RDD中的元素和这个元素的ID组合成键/值对，需要启动一个Spark作业来计算每一个分区的开始索引号，以便能顺序索引。</p>
 <p>zipWithUniqueId：是将RDD中的元素和一个唯一ID组合成键/值对，不需要这样一个额外的作业。</p>
 <h3 id="32rdd">3.2键值RDD转换操作</h3>
+<p>partitionBy:与基本转换操作中的repartition功能类似，根据partitioner函数生成新的ShuffledRDD，将原RDD重新分区(其实在repartition中也是先将RDD[T]转化成RDD[K,V]，这里的V是null，然后使用RDD[K,V]作为参数生成ShuffledRDD)。</p>
+<p>mapValues:针对[K,V]中的值进行map操作。</p>
+<p>flatMapValues:针对[K,V]中的值进行flatMap操作。</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">rdd</span> <span class="o">=</span> <span class="nx">sc.parallelize</span><span class="p">(</span><span class="kt">Array</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="mi">1</span><span class="p">)</span>
+<span class="nx">rdd</span><span class="p">:</span> <span class="nx">org.apache.spark.rdd.RDD</span><span class="err">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">0</span><span class="cp">]</span> at parallelize at <span class="nt">&lt;console&gt;</span>:27
+
+scala&gt; val partitionByRDD = rdd.partitionBy(new org.apache.spark.HashPartitioner(2))
+partitionByRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = ShuffledRDD<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> at partitionBy at <span class="nt">&lt;console&gt;</span>:29
+
+scala&gt; partitionByRDD.collect()
+res0: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = Array((2,1), (1,1), (1,2), (3,1))
+
+scala&gt; val mapValuesRDD = rdd.mapValues(x =&gt; x+1)
+mapValuesRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = MapPartitionsRDD<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span> at mapValues at <span class="nt">&lt;console&gt;</span>:29
+
+scala&gt; mapValuesRDD.collect()
+res4: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = Array((1,2), (1,3), (2,2), (3,2))
+
+scala&gt; val flatMapValuesRDD = rdd.flatMapValues(x =&gt; Seq(x,&quot;a&quot;))
+flatMapValuesRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nb">Any</span><span class="p">)</span><span class="cp">]</span> = MapPartitionsRDD<span class="cp">[</span><span class="mi">3</span><span class="cp">]</span> at flatMapValues at <span class="nt">&lt;console&gt;</span>:29
+
+scala&gt; flatMapValuesRDD.collect()
+res5: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nb">Any</span><span class="p">)</span><span class="cp">]</span> = Array((1,1), (1,a), (1,2), (1,a), (2,1), (2,a), (3,1), (3,a))
+</pre></div>
+
+
+<p>combineByKey，foldByKey，reduceByKey，groupByKey：四种键值对转换操作都是针对RDD[K,V]本身，不涉及与其它RDD的组合操作，四种操作类型最终都会归结为对combineByKey的调用。combineByKey接口是将RDD[K,V]转化成返回类型RDD[K,C]，这里V类型与C类型可以相同也可以不相同，combineByKey抽象接口一般需要需要传入以下5个典型参数：</p>
+<p>createCombiner:创建组合器函数，将V类型值转换成C类型值；</p>
+<p>mergeValue:合并值函数，将一个V类型值和一个C类型值合并成一个C类型值；</p>
+<p>mergeCombiners:合并组合器函数，将两个C类型值合并成一个C类型值；</p>
+<p>partitioner:指定分区函数；</p>
+<p>mapSideCombine:布尔类型值，指定是否需要在Map端进行combine操作，类似于MapReduce中进行的combine操作；</p>
+<p>combineByKey内部实现是通过三步来实现，1)根据是否需要在Map端进行combine操作决定是否对RDD先进行一次mapPartitions操作(利用createCombiner，mergeValue，mergeCombiners三个函数)来达到减少shuffle数据量的操作；2)根据partitioner函数对MapPartitionsRDD进行shuffle操作；3)对于shuffle的结果再进行一次combine操作；</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nx">scala.collection.mutable.HashSet</span>
+<span class="k">import</span> <span class="nx">scala.collection.mutable.HashSet</span>
+
+<span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">bufs</span> <span class="o">=</span> <span class="nx">pairs.mapValues</span><span class="p">(</span><span class="n">v</span> <span class="o">=&gt;</span> <span class="nx">HashSet</span><span class="p">(</span><span class="nx">v</span><span class="p">))</span>
+<span class="nx">bufs</span><span class="p">:</span> <span class="nx">org.apache.spark.rdd.RDD</span><span class="err">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">scala.collection.mutable.HashSet</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>)] = MapPartitionsRDD<span class="cp">[</span><span class="mi">5</span><span class="cp">]</span> at mapValues at <span class="nt">&lt;console&gt;</span>:30
+
+scala&gt; import scala.collection.mutable.HashSet
+import scala.collection.mutable.HashSet
+
+scala&gt; val pairs = sc.parallelize(Array((1,1),(1,2),(1,3),(1,1),(2,1)),2)
+pairs: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">6</span><span class="cp">]</span> at parallelize at <span class="nt">&lt;console&gt;</span>:30
+
+scala&gt; val bufs = pairs.mapValues(v =&gt; HashSet(v))
+bufs: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">scala.collection.mutable.HashSet</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>)] = MapPartitionsRDD<span class="cp">[</span><span class="mi">7</span><span class="cp">]</span> at mapValues at <span class="nt">&lt;console&gt;</span>:32
+
+scala&gt; val sums = bufs.foldByKey(new HashSet<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span>)(_ ++= _)
+sums: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">scala.collection.mutable.HashSet</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>)] = ShuffledRDD<span class="cp">[</span><span class="mi">8</span><span class="cp">]</span> at foldByKey at <span class="nt">&lt;console&gt;</span>:34
+
+scala&gt; sums.collect()
+res7: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">scala.collection.mutable.HashSet</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>)] = Array((2,Set(1)), (1,Set(1, 2, 3)))
+
+scala&gt; val reduceByKeyRDD = pairs.reduceByKey(_+_)
+reduceByKeyRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = ShuffledRDD<span class="cp">[</span><span class="mi">9</span><span class="cp">]</span> at reduceByKey at <span class="nt">&lt;console&gt;</span>:32
+
+scala&gt; reduceByKeyRDD.collect()
+res8: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = Array((2,1), (1,7))
+
+scala&gt; val groupByKeyRDD = pairs.groupByKey()
+groupByKeyRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Iterable</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>)] = ShuffledRDD<span class="cp">[</span><span class="mi">10</span><span class="cp">]</span> at groupByKey at <span class="nt">&lt;console&gt;</span>:32
+
+scala&gt; groupByKeyRDD.collect()
+res9: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Iterable</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>)] = Array((2,CompactBuffer(1)), (1,CompactBuffer(1, 2, 3, 1)))
+</pre></div>
+
+
+<p>join、leftOuterJoin、rightOuterJoin都是针对RDD[K,V]中K值相等的连接操作，分别对应内连接、左外连接、右外连接，最终都会调用cogroup来实现。而subtractByKey和基本转换操作subtract类似，只是针对RDD[K,V]中的K值来进行操作。</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">rdd1</span> <span class="o">=</span> <span class="nx">sc.parallelize</span><span class="p">(</span><span class="kt">Array</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="mi">1</span><span class="p">)</span>
+<span class="nx">rdd1</span><span class="p">:</span> <span class="nx">org.apache.spark.rdd.RDD</span><span class="err">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">18</span><span class="cp">]</span> at parallelize at <span class="nt">&lt;console&gt;</span>:30
+
+scala&gt; val rdd2 = sc.parallelize(Array((1,&#39;x&#39;),(2,&#39;y&#39;),(2,&#39;z&#39;),(4,&#39;w&#39;)),1)
+rdd2: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Char</span><span class="p">)</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">19</span><span class="cp">]</span> at parallelize at <span class="nt">&lt;console&gt;</span>:30
+
+scala&gt; val cogroupRDD = rdd1.cogroup(rdd2)
+cogroupRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nx">Iterable</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>, Iterable<span class="cp">[</span><span class="nx">Char</span><span class="cp">]</span>))] = MapPartitionsRDD<span class="cp">[</span><span class="mi">21</span><span class="cp">]</span> at cogroup at <span class="nt">&lt;console&gt;</span>:34
+
+scala&gt; cogroupRDD.collect()
+res13: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nx">Iterable</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>, Iterable<span class="cp">[</span><span class="nx">Char</span><span class="cp">]</span>))] = Array((4,(CompactBuffer(),CompactBuffer(w))), (1,(CompactBuffer(1, 2),CompactBuffer(x))), (3,(CompactBuffer(1),CompactBuffer())), (2,(CompactBuffer(1),CompactBuffer(y, z))))
+
+scala&gt; val joinRDD = rdd1.join(rdd2)
+joinRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Char</span><span class="p">))</span><span class="cp">]</span> = MapPartitionsRDD<span class="cp">[</span><span class="mi">24</span><span class="cp">]</span> at join at <span class="nt">&lt;console&gt;</span>:34
+
+scala&gt; joinRDD.collect()
+res14: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Char</span><span class="p">))</span><span class="cp">]</span> = Array((1,(1,x)), (1,(2,x)), (2,(1,y)), (2,(1,z)))
+
+scala&gt; val leftOuterJoinRDD = rdd1.leftOuterJoin(rdd2)
+leftOuterJoinRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nb">Option</span><span class="err">[</span><span class="nx">Char</span><span class="cp">]</span>))] = MapPartitionsRDD<span class="cp">[</span><span class="mi">27</span><span class="cp">]</span> at leftOuterJoin at <span class="nt">&lt;console&gt;</span>:34
+
+scala&gt; leftOuterJoinRDD.collect()
+res15: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nb">Option</span><span class="err">[</span><span class="nx">Char</span><span class="cp">]</span>))] = Array((1,(1,Some(x))), (1,(2,Some(x))), (3,(1,None)), (2,(1,Some(y))), (2,(1,Some(z))))
+
+scala&gt; val rightOuterJoinRDD = rdd1.rightOuterJoin(rdd2)
+rightOuterJoinRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nb">Option</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>, Char))] = MapPartitionsRDD<span class="cp">[</span><span class="mi">30</span><span class="cp">]</span> at rightOuterJoin at <span class="nt">&lt;console&gt;</span>:34
+
+scala&gt; rightOuterJoinRDD.collect()
+res16: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="p">(</span><span class="nb">Option</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>, Char))] = Array((4,(None,w)), (1,(Some(1),x)), (1,(Some(2),x)), (2,(Some(1),y)), (2,(Some(1),z)))
+
+scala&gt; val subtractByKeyRDD = rdd1.subtractByKey(rdd2)
+subtractByKeyRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = SubtractedRDD<span class="cp">[</span><span class="mi">31</span><span class="cp">]</span> at subtractByKey at <span class="nt">&lt;console&gt;</span>:34
+
+scala&gt; subtractByKeyRDD.collect()
+res17: Array<span class="cp">[</span><span class="p">(</span><span class="nx">Int</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = Array((3,1))
+</pre></div>
+
+
 <h3 id="33rdd">3.3RDD依赖关系</h3>
+<p>转换操作构建了RDD之间的大部分依赖关系，但是Spark内部生成的RDD对象数量一般多于用户书写的Spark应用程序包含的RDD，根本原因就是Spark的一些操作与RDD不是一一对应的。</p>
 <h2 id="4control-operation">4.控制操作(control operation)</h2>
 <h2 id="5action-operation">5.行动操作(action operation)</h2>
 <h3 id="51">5.1集合标量行动操作</h3>
