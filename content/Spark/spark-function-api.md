@@ -215,7 +215,121 @@ zipWithUniqueId：是将RDD中的元素和一个唯一ID组合成键/值对，�
 
 ### 3.2键值RDD转换操作 ###
 
+partitionBy:与基本转换操作中的repartition功能类似，根据partitioner函数生成新的ShuffledRDD，将原RDD重新分区(其实在repartition中也是先将RDD[T]转化成RDD[K,V]，这里的V是null，然后使用RDD[K,V]作为参数生成ShuffledRDD)。
+
+mapValues:针对[K,V]中的值进行map操作。
+
+flatMapValues:针对[K,V]中的值进行flatMap操作。
+
+    scala> val rdd = sc.parallelize(Array((1,1),(1,2),(2,1),(3,1)),1)
+    rdd: org.apache.spark.rdd.RDD[(Int, Int)] = ParallelCollectionRDD[0] at parallelize at <console>:27
+
+    scala> val partitionByRDD = rdd.partitionBy(new org.apache.spark.HashPartitioner(2))
+    partitionByRDD: org.apache.spark.rdd.RDD[(Int, Int)] = ShuffledRDD[1] at partitionBy at <console>:29
+
+    scala> partitionByRDD.collect()
+    res0: Array[(Int, Int)] = Array((2,1), (1,1), (1,2), (3,1))
+
+    scala> val mapValuesRDD = rdd.mapValues(x => x+1)
+    mapValuesRDD: org.apache.spark.rdd.RDD[(Int, Int)] = MapPartitionsRDD[2] at mapValues at <console>:29
+
+    scala> mapValuesRDD.collect()
+    res4: Array[(Int, Int)] = Array((1,2), (1,3), (2,2), (3,2))
+
+    scala> val flatMapValuesRDD = rdd.flatMapValues(x => Seq(x,"a"))
+    flatMapValuesRDD: org.apache.spark.rdd.RDD[(Int, Any)] = MapPartitionsRDD[3] at flatMapValues at <console>:29
+
+    scala> flatMapValuesRDD.collect()
+    res5: Array[(Int, Any)] = Array((1,1), (1,a), (1,2), (1,a), (2,1), (2,a), (3,1), (3,a))
+
+combineByKey，foldByKey，reduceByKey，groupByKey：四种键值对转换操作都是针对RDD[K,V]本身，不涉及与其它RDD的组合操作，四种操作类型最终都会归结为对combineByKey的调用。combineByKey接口是将RDD[K,V]转化成返回类型RDD[K,C]，这里V类型与C类型可以相同也可以不相同，combineByKey抽象接口一般需要需要传入以下5个典型参数：
+
+createCombiner:创建组合器函数，将V类型值转换成C类型值；
+
+mergeValue:合并值函数，将一个V类型值和一个C类型值合并成一个C类型值；
+
+mergeCombiners:合并组合器函数，将两个C类型值合并成一个C类型值；
+
+partitioner:指定分区函数；
+
+mapSideCombine:布尔类型值，指定是否需要在Map端进行combine操作，类似于MapReduce中进行的combine操作；
+
+combineByKey内部实现是通过三步来实现，1)根据是否需要在Map端进行combine操作决定是否对RDD先进行一次mapPartitions操作(利用createCombiner，mergeValue，mergeCombiners三个函数)来达到减少shuffle数据量的操作；2)根据partitioner函数对MapPartitionsRDD进行shuffle操作；3)对于shuffle的结果再进行一次combine操作；
+
+    scala> import scala.collection.mutable.HashSet
+    import scala.collection.mutable.HashSet
+
+    scala> val bufs = pairs.mapValues(v => HashSet(v))
+    bufs: org.apache.spark.rdd.RDD[(Int, scala.collection.mutable.HashSet[Int])] = MapPartitionsRDD[5] at mapValues at <console>:30
+
+    scala> import scala.collection.mutable.HashSet
+    import scala.collection.mutable.HashSet
+
+    scala> val pairs = sc.parallelize(Array((1,1),(1,2),(1,3),(1,1),(2,1)),2)
+    pairs: org.apache.spark.rdd.RDD[(Int, Int)] = ParallelCollectionRDD[6] at parallelize at <console>:30
+
+    scala> val bufs = pairs.mapValues(v => HashSet(v))
+    bufs: org.apache.spark.rdd.RDD[(Int, scala.collection.mutable.HashSet[Int])] = MapPartitionsRDD[7] at mapValues at <console>:32
+
+    scala> val sums = bufs.foldByKey(new HashSet[Int])(_ ++= _)
+    sums: org.apache.spark.rdd.RDD[(Int, scala.collection.mutable.HashSet[Int])] = ShuffledRDD[8] at foldByKey at <console>:34
+
+    scala> sums.collect()
+    res7: Array[(Int, scala.collection.mutable.HashSet[Int])] = Array((2,Set(1)), (1,Set(1, 2, 3)))
+
+    scala> val reduceByKeyRDD = pairs.reduceByKey(_+_)
+    reduceByKeyRDD: org.apache.spark.rdd.RDD[(Int, Int)] = ShuffledRDD[9] at reduceByKey at <console>:32
+
+    scala> reduceByKeyRDD.collect()
+    res8: Array[(Int, Int)] = Array((2,1), (1,7))
+
+    scala> val groupByKeyRDD = pairs.groupByKey()
+    groupByKeyRDD: org.apache.spark.rdd.RDD[(Int, Iterable[Int])] = ShuffledRDD[10] at groupByKey at <console>:32
+
+    scala> groupByKeyRDD.collect()
+    res9: Array[(Int, Iterable[Int])] = Array((2,CompactBuffer(1)), (1,CompactBuffer(1, 2, 3, 1)))
+
+join、leftOuterJoin、rightOuterJoin都是针对RDD[K,V]中K值相等的连接操作，分别对应内连接、左外连接、右外连接，最终都会调用cogroup来实现。而subtractByKey和基本转换操作subtract类似，只是针对RDD[K,V]中的K值来进行操作。
+
+    scala> val rdd1 = sc.parallelize(Array((1,1),(1,2),(2,1),(3,1)),1)
+    rdd1: org.apache.spark.rdd.RDD[(Int, Int)] = ParallelCollectionRDD[18] at parallelize at <console>:30
+
+    scala> val rdd2 = sc.parallelize(Array((1,'x'),(2,'y'),(2,'z'),(4,'w')),1)
+    rdd2: org.apache.spark.rdd.RDD[(Int, Char)] = ParallelCollectionRDD[19] at parallelize at <console>:30
+
+    scala> val cogroupRDD = rdd1.cogroup(rdd2)
+    cogroupRDD: org.apache.spark.rdd.RDD[(Int, (Iterable[Int], Iterable[Char]))] = MapPartitionsRDD[21] at cogroup at <console>:34
+
+    scala> cogroupRDD.collect()
+    res13: Array[(Int, (Iterable[Int], Iterable[Char]))] = Array((4,(CompactBuffer(),CompactBuffer(w))), (1,(CompactBuffer(1, 2),CompactBuffer(x))), (3,(CompactBuffer(1),CompactBuffer())), (2,(CompactBuffer(1),CompactBuffer(y, z))))
+
+    scala> val joinRDD = rdd1.join(rdd2)
+    joinRDD: org.apache.spark.rdd.RDD[(Int, (Int, Char))] = MapPartitionsRDD[24] at join at <console>:34
+
+    scala> joinRDD.collect()
+    res14: Array[(Int, (Int, Char))] = Array((1,(1,x)), (1,(2,x)), (2,(1,y)), (2,(1,z)))
+
+    scala> val leftOuterJoinRDD = rdd1.leftOuterJoin(rdd2)
+    leftOuterJoinRDD: org.apache.spark.rdd.RDD[(Int, (Int, Option[Char]))] = MapPartitionsRDD[27] at leftOuterJoin at <console>:34
+
+    scala> leftOuterJoinRDD.collect()
+    res15: Array[(Int, (Int, Option[Char]))] = Array((1,(1,Some(x))), (1,(2,Some(x))), (3,(1,None)), (2,(1,Some(y))), (2,(1,Some(z))))
+
+    scala> val rightOuterJoinRDD = rdd1.rightOuterJoin(rdd2)
+    rightOuterJoinRDD: org.apache.spark.rdd.RDD[(Int, (Option[Int], Char))] = MapPartitionsRDD[30] at rightOuterJoin at <console>:34
+
+    scala> rightOuterJoinRDD.collect()
+    res16: Array[(Int, (Option[Int], Char))] = Array((4,(None,w)), (1,(Some(1),x)), (1,(Some(2),x)), (2,(Some(1),y)), (2,(Some(1),z)))
+
+    scala> val subtractByKeyRDD = rdd1.subtractByKey(rdd2)
+    subtractByKeyRDD: org.apache.spark.rdd.RDD[(Int, Int)] = SubtractedRDD[31] at subtractByKey at <console>:34
+
+    scala> subtractByKeyRDD.collect()
+    res17: Array[(Int, Int)] = Array((3,1))
+
 ### 3.3RDD依赖关系 ###
+
+转换操作构建了RDD之间的大部分依赖关系，但是Spark内部生成的RDD对象数量一般多于用户书写的Spark应用程序包含的RDD，根本原因就是Spark的一些操作与RDD不是一一对应的。
 
 ## 4.控制操作(control operation) ##
 
