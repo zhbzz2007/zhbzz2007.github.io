@@ -333,8 +333,173 @@ join、leftOuterJoin、rightOuterJoin都是针对RDD[K,V]中K值相等的连接�
 
 ## 4.控制操作(control operation) ##
 
+cache、persist：在Spark中对RDD进行持久化操作是一项非常重要的功能，可以将RDD持久化在不同层次的存储介质中，以便后续的操作能够重复使用，这对iterative和interactive的应用来说会极大地提高性能。
+
+checkpoint：将RDD持久化在HDFS中，其与persist(如果也持久化在磁盘上)的一个区别是checkpoint将会切断此RDD之前的依赖关系，而persist接口依然保留着RDD的依赖关系。
+
+checkpoint的主要作用有如下两点：
+
+1)如果一个Spark程序会长时间驻留运行(如Spark Streaming一般会7*24小时运行)，过长的依赖将会占用很多系统资源，那么定期地将RDD进行checkpoint操作，能够有效地节省系统资源；
+
+2)维护过长的依赖关系还会出现一个问题，如果Spark在运行过程中出现节点失败的情况，那么RDD进行容错重算的成本会非常高；
+
+    scala> val rdd = sc.makeRDD(1 to 4,1)
+    rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[0] at makeRDD at <console>:27
+
+    scala> val flatMapRDD = rdd.flatMap(x => Seq(x,x))
+    flatMapRDD: org.apache.spark.rdd.RDD[Int] = MapPartitionsRDD[1] at flatMap at <console>:29
+
+    scala> sc.setCheckpointDir("/home/zhb/")
+
+    scala> flatMapRDD.checkpoint()
+
+    scala> flatMapRDD.dependencies.head.rdd
+    res2: org.apache.spark.rdd.RDD[_] = ParallelCollectionRDD[0] at makeRDD at <console>:27
+
+    scala> flatMapRDD.collect()
+    res3: Array[Int] = Array(1, 1, 2, 2, 3, 3, 4, 4)
+
+    scala> flatMapRDD.dependencies.head.rdd
+    res4: org.apache.spark.rdd.RDD[_] = ReliableCheckpointRDD[2] at collect at <console>:32
+
+
 ## 5.行动操作(action operation) ##
+
+行动操作是和转换操作相对应的一种对RDD的操作类型，在Spark的程序中，每调用一次行动操作，都会触发一次Spark的调度并返回相应的结果，行动操作可以分为两类，
+
+行动操作将标量或者集合返回给Spark的客户端程序，比如返回RDD中数据集的数量或者是返回RDD中的一部分符合条件的数据；
+
+行动操作将RDD直接保存到外部文件系统或者数据库中，比如将RDD保存到HDFS文件系统中；
 
 ### 5.1集合标量行动操作 ###
 
+first：返回RDD中的第一个元素；
+
+count：返回RDD中元素的个数；
+
+reduce：对RDD中的元素进行二元计算，返回计算结果；
+
+    scala> val rdd = sc.makeRDD(1 to 10,1)
+    rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[3] at makeRDD at <console>:27
+
+    scala> rdd.first
+    res5: Int = 1
+
+    scala> rdd.count
+    res6: Long = 10
+
+    scala> rdd.reduce(_ + _)
+    res7: Int = 55
+
+    scala> rdd.reduce(_ * _)
+    res8: Int = 3628800
+
+    scala> rdd.reduce(_ - _)
+    res9: Int = -53
+
+collect/toArray：以集合形式返回RDD的元素；
+
+take：将RDD作为集合，返回集合中[0,num-1]下标的元素；
+
+top：按照默认的或者是指定的排序规则，返回前num个元素；
+
+takeOrdered：以与top相反的排序规则，返回前num个元素；
+
+    scala> val nums = Array.range(1,10)
+    nums: Array[Int] = Array(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+    scala> val rdd = sc.makeRDD(scala.util.Random.shuffle(nums),2)
+    rdd: org.apache.spark.rdd.RDD[Int] = ParallelCollectionRDD[4] at makeRDD at <console>:29
+
+    scala> rdd.collect()
+    res10: Array[Int] = Array(7, 6, 5, 1, 8, 9, 3, 4, 2)
+
+    scala> rdd.toArray()
+    warning: there were 1 deprecation warning(s); re-run with -deprecation for details
+    res11: Array[Int] = Array(7, 6, 5, 1, 8, 9, 3, 4, 2)
+
+    scala> rdd.take(3)
+    res12: Array[Int] = Array(7, 6, 5)
+
+    scala> rdd.top(3)
+    res13: Array[Int] = Array(9, 8, 7)
+
+    scala> rdd.takeOrdered(3)
+    res14: Array[Int] = Array(1, 2, 3)
+
+    scala> implicit val ord = implicitly[Ordering[Int]].reverse
+    ord: scala.math.Ordering[Int] = scala.math.Ordering$$anon$4@133550ed
+
+    scala> rdd.take(3)
+    res15: Array[Int] = Array(7, 6, 5)
+
+    scala> rdd.top(3)
+    res16: Array[Int] = Array(1, 2, 3)
+
+    scala> rdd.takeOrdered(3)
+    res17: Array[Int] = Array(9, 8, 7)
+
+aggregate：主要提供两个函数，一个是seqOp，其将RDD中的每一个分区的数据聚合成类型为U的值；另一个函数combOp，将各个分区聚合起来的值合并在一起得到最终类型为U的返回值。
+
+    scala> import scala.collection.mutable.HashMap
+    import scala.collection.mutable.HashMap
+
+    scala> val pairs = sc.makeRDD(Array(("a",1),("b",2),("a",4),("c",5),("a",3)))
+    pairs: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[10] at makeRDD at <console>:32
+
+    scala> type StringMap = HashMap[String,Int]
+    defined type alias StringMap
+
+    scala> val emptyMap = new StringMap{
+         |     override def default(key:String):Int = 0
+         | }
+    emptyMap: StringMap = Map()
+
+    scala> val mergeElement:(StringMap,(String,Int)) => StringMap = (map,pair) =>{
+         |     map(pair._1) += pair._2
+         |     map
+         | }
+    mergeElement: (StringMap, (String, Int)) => StringMap = <function2>
+
+    scala> val mergeMaps:(StringMap,StringMap) => StringMap = (map1,map2) => {
+         |     for((key,value) <- map2){
+         |         map1(key) += value
+         |     }
+         |     map1
+         | }
+    mergeMaps: (StringMap, StringMap) => StringMap = <function2>
+
+    scala> val aggregateResult = pairs.aggregate(emptyMap)(mergeElement,mergeMaps)
+    aggregateResult: StringMap = Map(b -> 2, a -> 8, c -> 5)
+
+
+fold：是aggregate的便利接口，其中op操作既是seqOp操作，也是combOp操作，最终的返回类型也是T，即与RDD中的每一个元素的类型是一样的；
+
+    scala> val pairs = sc.makeRDD(Array(("a",1),("b",2),("a",4),("c",5),("a",3)))
+    pairs: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[12] at makeRDD at <console>:32
+
+    scala> val compareElement:((String,Int),(String,Int)) => (String,Int) = (val1,val2) => {
+         |     if (val1._2 >= val2._2){
+         |         val1
+         |     }else{
+         |         val2
+         |     }
+         | }
+    compareElement: ((String, Int), (String, Int)) => (String, Int) = <function2>
+
+    scala> val foldResult = pairs.fold(("0",0))(compareElement)
+    foldResult: (String, Int) = (c,5)
+
+lookup：是针对(K,V)类型RDD的行动操作，对于给定的键值，返回与此键值相对应的所有值。
+
+    scala> val rdd = sc.makeRDD(Array(("a",1),("b",2),("a",4),("c",5),("a",3)),1)
+    rdd: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[13] at makeRDD at <console>:32
+
+    scala> rdd.lookup("a")
+    res19: Seq[Int] = WrappedArray(1, 4, 3)
+
 ### 5.2存储行动操作 ###
+
+对RDD最后的归宿处了返回为集合和标量，也可以将RDD存储到外部文件系统或者数据库中，Spark系统与Hadoop是完全兼容的，所以对于MapReduce所支持的读写文件或者数据库类型，Spark是完全兼容的。
+
+saveAsTextFile、saveAsObjectFile、saveAsHadoopFile、outputFormatClass、saveAsHadoopDataset，前面4个API是saveAsHadoopDataset的简易实现版本，仅仅支持将RDD存储到HDFS中，而saveAsHadoopDataset的参数类型是JobConf，所以其不仅能将RDD存储到HDFS中，也可以将RDD存储到其它数据库中，如Hbase、MongoDB、Cassandra等。将RDD保存到HDFS中，通常需要关注或者设置五个参数，即文件保存的路径、key值的class类型、Value值的class类型、RDD输出格式，以及最后一个相关的参数codec。
