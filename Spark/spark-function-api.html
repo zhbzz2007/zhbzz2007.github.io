@@ -420,9 +420,164 @@ res17: Array<span class="cp">[</span><span class="p">(</span><span class="nx">In
 <h3 id="33rdd">3.3RDD依赖关系</h3>
 <p>转换操作构建了RDD之间的大部分依赖关系，但是Spark内部生成的RDD对象数量一般多于用户书写的Spark应用程序包含的RDD，根本原因就是Spark的一些操作与RDD不是一一对应的。</p>
 <h2 id="4control-operation">4.控制操作(control operation)</h2>
+<p>cache、persist：在Spark中对RDD进行持久化操作是一项非常重要的功能，可以将RDD持久化在不同层次的存储介质中，以便后续的操作能够重复使用，这对iterative和interactive的应用来说会极大地提高性能。</p>
+<p>checkpoint：将RDD持久化在HDFS中，其与persist(如果也持久化在磁盘上)的一个区别是checkpoint将会切断此RDD之前的依赖关系，而persist接口依然保留着RDD的依赖关系。</p>
+<p>checkpoint的主要作用有如下两点：</p>
+<p>1)如果一个Spark程序会长时间驻留运行(如Spark Streaming一般会7*24小时运行)，过长的依赖将会占用很多系统资源，那么定期地将RDD进行checkpoint操作，能够有效地节省系统资源；</p>
+<p>2)维护过长的依赖关系还会出现一个问题，如果Spark在运行过程中出现节点失败的情况，那么RDD进行容错重算的成本会非常高；</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">rdd</span> <span class="o">=</span> <span class="nx">sc.makeRDD</span><span class="p">(</span><span class="mi">1</span> <span class="k">to</span> <span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="nx">rdd</span><span class="p">:</span> <span class="nx">org.apache.spark.rdd.RDD</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">0</span><span class="cp">]</span> at makeRDD at <span class="nt">&lt;console&gt;</span>:27
+
+scala&gt; val flatMapRDD = rdd.flatMap(x =&gt; Seq(x,x))
+flatMapRDD: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = MapPartitionsRDD<span class="cp">[</span><span class="mi">1</span><span class="cp">]</span> at flatMap at <span class="nt">&lt;console&gt;</span>:29
+
+scala&gt; sc.setCheckpointDir(&quot;/home/zhb/&quot;)
+
+scala&gt; flatMapRDD.checkpoint()
+
+scala&gt; flatMapRDD.dependencies.head.rdd
+res2: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="nx">_</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">0</span><span class="cp">]</span> at makeRDD at <span class="nt">&lt;console&gt;</span>:27
+
+scala&gt; flatMapRDD.collect()
+res3: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(1, 1, 2, 2, 3, 3, 4, 4)
+
+scala&gt; flatMapRDD.dependencies.head.rdd
+res4: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="nx">_</span><span class="cp">]</span> = ReliableCheckpointRDD<span class="cp">[</span><span class="mi">2</span><span class="cp">]</span> at collect at <span class="nt">&lt;console&gt;</span>:32
+</pre></div>
+
+
 <h2 id="5action-operation">5.行动操作(action operation)</h2>
+<p>行动操作是和转换操作相对应的一种对RDD的操作类型，在Spark的程序中，每调用一次行动操作，都会触发一次Spark的调度并返回相应的结果，行动操作可以分为两类，</p>
+<p>行动操作将标量或者集合返回给Spark的客户端程序，比如返回RDD中数据集的数量或者是返回RDD中的一部分符合条件的数据；</p>
+<p>行动操作将RDD直接保存到外部文件系统或者数据库中，比如将RDD保存到HDFS文件系统中；</p>
 <h3 id="51">5.1集合标量行动操作</h3>
+<p>first：返回RDD中的第一个元素；</p>
+<p>count：返回RDD中元素的个数；</p>
+<p>reduce：对RDD中的元素进行二元计算，返回计算结果；</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">rdd</span> <span class="o">=</span> <span class="nx">sc.makeRDD</span><span class="p">(</span><span class="mi">1</span> <span class="k">to</span> <span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="nx">rdd</span><span class="p">:</span> <span class="nx">org.apache.spark.rdd.RDD</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">3</span><span class="cp">]</span> at makeRDD at <span class="nt">&lt;console&gt;</span>:27
+
+scala&gt; rdd.first
+res5: Int = 1
+
+scala&gt; rdd.count
+res6: Long = 10
+
+scala&gt; rdd.reduce(_ + _)
+res7: Int = 55
+
+scala&gt; rdd.reduce(_ * _)
+res8: Int = 3628800
+
+scala&gt; rdd.reduce(_ - _)
+res9: Int = -53
+</pre></div>
+
+
+<p>collect/toArray：以集合形式返回RDD的元素；</p>
+<p>take：将RDD作为集合，返回集合中[0,num-1]下标的元素；</p>
+<p>top：按照默认的或者是指定的排序规则，返回前num个元素；</p>
+<p>takeOrdered：以与top相反的排序规则，返回前num个元素；</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">nums</span> <span class="o">=</span> <span class="kt">Array</span><span class="bp">.</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="nx">nums</span><span class="p">:</span> <span class="kt">Array</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+scala&gt; val rdd = sc.makeRDD(scala.util.Random.shuffle(nums),2)
+rdd: org.apache.spark.rdd.RDD<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">4</span><span class="cp">]</span> at makeRDD at <span class="nt">&lt;console&gt;</span>:29
+
+scala&gt; rdd.collect()
+res10: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(7, 6, 5, 1, 8, 9, 3, 4, 2)
+
+scala&gt; rdd.toArray()
+warning: there were 1 deprecation warning(s); re-run with -deprecation for details
+res11: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(7, 6, 5, 1, 8, 9, 3, 4, 2)
+
+scala&gt; rdd.take(3)
+res12: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(7, 6, 5)
+
+scala&gt; rdd.top(3)
+res13: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(9, 8, 7)
+
+scala&gt; rdd.takeOrdered(3)
+res14: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(1, 2, 3)
+
+scala&gt; implicit val ord = implicitly<span class="cp">[</span><span class="nx">Ordering</span><span class="err">[</span><span class="nx">Int</span><span class="cp">]</span>].reverse
+ord: scala.math.Ordering<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = scala.math.Ordering$$anon$4@133550ed
+
+scala&gt; rdd.take(3)
+res15: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(7, 6, 5)
+
+scala&gt; rdd.top(3)
+res16: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(1, 2, 3)
+
+scala&gt; rdd.takeOrdered(3)
+res17: Array<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = Array(9, 8, 7)
+</pre></div>
+
+
+<p>aggregate：主要提供两个函数，一个是seqOp，其将RDD中的每一个分区的数据聚合成类型为U的值；另一个函数combOp，将各个分区聚合起来的值合并在一起得到最终类型为U的返回值。</p>
+<div class="hlcode"><pre>scala<span class="o">&gt;</span> import scala.collection.mutable.HashMap
+import scala.collection.mutable.HashMap
+
+scala<span class="o">&gt;</span> val pairs <span class="o">=</span> sc.makeRDD<span class="p">(</span>Array<span class="p">((</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="m">1</span><span class="p">),(</span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="m">2</span><span class="p">),(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="m">4</span><span class="p">),(</span><span class="s">&quot;c&quot;</span><span class="p">,</span><span class="m">5</span><span class="p">),(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="m">3</span><span class="p">)))</span>
+pairs<span class="o">:</span> org.apache.spark.rdd.RDD<span class="p">[(</span>String<span class="p">,</span> Int<span class="p">)]</span> <span class="o">=</span> ParallelCollectionRDD<span class="p">[</span><span class="m">10</span><span class="p">]</span> at makeRDD at <span class="o">&lt;</span>console<span class="o">&gt;:</span><span class="m">32</span>
+
+scala<span class="o">&gt;</span> type StringMap <span class="o">=</span> HashMap<span class="p">[</span>String<span class="p">,</span>Int<span class="p">]</span>
+defined type alias StringMap
+
+scala<span class="o">&gt;</span> val emptyMap <span class="o">=</span> new StringMap<span class="p">{</span>
+     <span class="o">|</span>     override def default<span class="p">(</span>key<span class="o">:</span>String<span class="p">)</span><span class="o">:</span>Int <span class="o">=</span> <span class="m">0</span>
+     <span class="o">|</span> <span class="p">}</span>
+emptyMap<span class="o">:</span> StringMap <span class="o">=</span> Map<span class="p">()</span>
+
+scala<span class="o">&gt;</span> val mergeElement<span class="o">:</span><span class="p">(</span>StringMap<span class="p">,(</span>String<span class="p">,</span>Int<span class="p">))</span> <span class="o">=&gt;</span> StringMap <span class="o">=</span> <span class="p">(</span>map<span class="p">,</span>pair<span class="p">)</span> <span class="o">=&gt;</span><span class="p">{</span>
+     <span class="o">|</span>     map<span class="p">(</span>pair._1<span class="p">)</span> <span class="o">+=</span> pair._2
+     <span class="o">|</span>     map
+     <span class="o">|</span> <span class="p">}</span>
+mergeElement<span class="o">:</span> <span class="p">(</span>StringMap<span class="p">,</span> <span class="p">(</span>String<span class="p">,</span> Int<span class="p">))</span> <span class="o">=&gt;</span> StringMap <span class="o">=</span> <span class="o">&lt;</span>function2<span class="o">&gt;</span>
+
+scala<span class="o">&gt;</span> val mergeMaps<span class="o">:</span><span class="p">(</span>StringMap<span class="p">,</span>StringMap<span class="p">)</span> <span class="o">=&gt;</span> StringMap <span class="o">=</span> <span class="p">(</span>map1<span class="p">,</span>map2<span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+     <span class="o">|</span>     <span class="kr">for</span><span class="p">((</span>key<span class="p">,</span>value<span class="p">)</span> <span class="o">&lt;-</span> map2<span class="p">){</span>
+     <span class="o">|</span>         map1<span class="p">(</span>key<span class="p">)</span> <span class="o">+=</span> value
+     <span class="o">|</span>     <span class="p">}</span>
+     <span class="o">|</span>     map1
+     <span class="o">|</span> <span class="p">}</span>
+mergeMaps<span class="o">:</span> <span class="p">(</span>StringMap<span class="p">,</span> StringMap<span class="p">)</span> <span class="o">=&gt;</span> StringMap <span class="o">=</span> <span class="o">&lt;</span>function2<span class="o">&gt;</span>
+
+scala<span class="o">&gt;</span> val aggregateResult <span class="o">=</span> pairs.aggregate<span class="p">(</span>emptyMap<span class="p">)(</span>mergeElement<span class="p">,</span>mergeMaps<span class="p">)</span>
+aggregateResult<span class="o">:</span> StringMap <span class="o">=</span> Map<span class="p">(</span>b <span class="o">-&gt;</span> <span class="m">2</span><span class="p">,</span> a <span class="o">-&gt;</span> <span class="m">8</span><span class="p">,</span> c <span class="o">-&gt;</span> <span class="m">5</span><span class="p">)</span>
+</pre></div>
+
+
+<p>fold：是aggregate的便利接口，其中op操作既是seqOp操作，也是combOp操作，最终的返回类型也是T，即与RDD中的每一个元素的类型是一样的；</p>
+<div class="hlcode"><pre>scala&gt; val pairs = sc.makeRDD(Array((&quot;a&quot;,1),(&quot;b&quot;,2),(&quot;a&quot;,4),(&quot;c&quot;,5),(&quot;a&quot;,3)))
+pairs: org.apache.spark.rdd.RDD[(String, Int)] = ParallelCollectionRDD[12] at makeRDD at <span class="nt">&lt;console&gt;</span>:32
+
+scala&gt; val compareElement:((String,Int),(String,Int)) =&gt; (String,Int) = (val1,val2) =&gt; {
+     |     if (val1._2 &gt;= val2._2){
+     |         val1
+     |     }else{
+     |         val2
+     |     }
+     | }
+compareElement: ((String, Int), (String, Int)) =&gt; (String, Int) = <span class="nt">&lt;function2&gt;</span>
+
+scala&gt; val foldResult = pairs.fold((&quot;0&quot;,0))(compareElement)
+foldResult: (String, Int) = (c,5)
+</pre></div>
+
+
+<p>lookup：是针对(K,V)类型RDD的行动操作，对于给定的键值，返回与此键值相对应的所有值。</p>
+<div class="hlcode"><pre><span class="nx">scala</span><span class="o">&gt;</span> <span class="nx">val</span> <span class="n">rdd</span> <span class="o">=</span> <span class="nx">sc.makeRDD</span><span class="p">(</span><span class="kt">Array</span><span class="p">((</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="mi">2</span><span class="p">),(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">),(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">),(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span><span class="mi">1</span><span class="p">)</span>
+<span class="nx">rdd</span><span class="p">:</span> <span class="nx">org.apache.spark.rdd.RDD</span><span class="err">[</span><span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="nx">Int</span><span class="p">)</span><span class="cp">]</span> = ParallelCollectionRDD<span class="cp">[</span><span class="mi">13</span><span class="cp">]</span> at makeRDD at <span class="nt">&lt;console&gt;</span>:32
+
+scala&gt; rdd.lookup(&quot;a&quot;)
+res19: Seq<span class="cp">[</span><span class="nx">Int</span><span class="cp">]</span> = WrappedArray(1, 4, 3)
+</pre></div>
+
+
 <h3 id="52">5.2存储行动操作</h3>
+<p>对RDD最后的归宿处了返回为集合和标量，也可以将RDD存储到外部文件系统或者数据库中，Spark系统与Hadoop是完全兼容的，所以对于MapReduce所支持的读写文件或者数据库类型，Spark是完全兼容的。</p>
+<p>saveAsTextFile、saveAsObjectFile、saveAsHadoopFile、outputFormatClass、saveAsHadoopDataset，前面4个API是saveAsHadoopDataset的简易实现版本，仅仅支持将RDD存储到HDFS中，而saveAsHadoopDataset的参数类型是JobConf，所以其不仅能将RDD存储到HDFS中，也可以将RDD存储到其它数据库中，如Hbase、MongoDB、Cassandra等。将RDD保存到HDFS中，通常需要关注或者设置五个参数，即文件保存的路径、key值的class类型、Value值的class类型、RDD输出格式，以及最后一个相关的参数codec。</p>
 </div>
 
         </div>
