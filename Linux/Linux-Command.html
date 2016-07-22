@@ -69,6 +69,25 @@
 
 </li>
 <li>
+<p>cp</p>
+<p>用于复制文件或目录；</p>
+</li>
+<li>
+<p>cut</p>
+<p>负责剪切数据，以每一行为一个处理对象，这种机制和sed一样；</p>
+<p>输入：</p>
+<div class="hlcode"><pre><span class="n">cat</span> <span class="mf">1.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">cut</span> <span class="o">-</span><span class="n">c</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
+</pre></div>
+
+
+<p>输出：</p>
+<div class="hlcode"><pre><span class="n">o</span><span class="p">,</span><span class="n">Linu</span>
+<span class="n">ke</span> <span class="n">Ubu</span>
+</pre></div>
+
+
+</li>
+<li>
 <p>diff</p>
 <p>比较两个文件的差异，如果没有差异，则不显示任何信息，如果有差异，则显示出有差异的地方；</p>
 <p>输入：</p>
@@ -116,21 +135,6 @@
 <p>可辨识C原始代码文件，并加以格式化，以方便用户阅读；</p>
 </li>
 <li>
-<p>cut</p>
-<p>负责剪切数据，以每一行为一个处理对象，这种机制和sed一样；</p>
-<p>输入：</p>
-<div class="hlcode"><pre><span class="n">cat</span> <span class="mf">1.</span><span class="n">txt</span> <span class="o">|</span> <span class="n">cut</span> <span class="o">-</span><span class="n">c</span> <span class="mi">5</span><span class="o">-</span><span class="mi">10</span>
-</pre></div>
-
-
-<p>输出：</p>
-<div class="hlcode"><pre><span class="n">o</span><span class="p">,</span><span class="n">Linu</span>
-<span class="n">ke</span> <span class="n">Ubu</span>
-</pre></div>
-
-
-</li>
-<li>
 <p>ln</p>
 <p>为一个文件在另一个位置建立一个同步的链接，最常用的参数是-s；</p>
 </li>
@@ -149,6 +153,10 @@
 <li>
 <p>mattrib</p>
 <p>变更或者显示MS-DOS文件的属性；</p>
+</li>
+<li>
+<p>mcopy</p>
+<p>可在MS-DOS文件系统中复制文档或是在MS-DOS和Linux文件系统之间复制文档；</p>
 </li>
 <li>
 <p>mdel</p>
@@ -179,14 +187,72 @@
 <p>更改MS-DOS文件或者目录的名称，或是移动文件或目录；</p>
 </li>
 <li>
+<p>mshowfat</p>
+<p>用于显示MS-DOS文件在FAT中的记录；</p>
+</li>
+<li>
 <p>mtools</p>
 <p>显示mtools支持的指令，为MS-DOS文件系统的工具程序，可模拟许多MS-DOS的指令，这些指令都是mtools的符号连接，因此会有一些共同的特性；</p>
 </li>
 <li>
 <p>mtoolstest</p>
-<p>用于测试并显示mtools的相关设置；
-27. mv</p>
+<p>用于测试并显示mtools的相关设置；</p>
+</li>
+<li>
+<p>mv</p>
 <p>是move的所写，可以用来移动文件或者将文件改名，经常用来备份文件或者目录；</p>
+</li>
+<li>
+<p>od</p>
+<p>od命令可以以八进制、十进制、十六进制和ASCII码来显示文件或者流，它们对于访问或可视地检查文件中不能直接显示在终端上的字符很有用；</p>
+</li>
+<li>
+<p>paste</p>
+<p>主要用来将多个文件的内容合并，与cut命令完成的功能刚好相反；</p>
+</li>
+<li>
+<p>rcp</p>
+<p>代表"remote file copy"(远程文件拷贝)，用于在计算机之间拷贝文件，有两种格式，一种格式用于文件到文件的拷贝，第二总格式用于把文件或目录拷贝到另一个目录中；</p>
+</li>
+<li>
+<p>rhmask</p>
+<p>用于对文件进行加密和解密操作，方便用户在公开的网络上传输该文件，而不至于被任意盗用；</p>
+</li>
+<li>
+<p>rm</p>
+<p>删除一个目录中的一个或多个文件或目录，它也可以将某个目录及其下的所有文件及子目录均删除，对于链接文件，只是删除了链接，原有文件均保持不变；</p>
+</li>
+<li>
+<p>slocate</p>
+<p>查找文件或目录，slocate本身具有一个数据库，里面存放了系统中文件和目录的相关信息；</p>
+</li>
+<li>
+<p>split</p>
+<p>可以将一个大文件分割成多个小文件，有时需要将文件分割成更小的片段，比如为提高可读性，生成日志；</p>
+</li>
+<li>
+<p>tee</p>
+<p>tee命令读取标准输入，把这些内容同时输出到标准输出和(多个)文件中，既把输出保存到文件中，又在屏幕上看到输出内容；</p>
+</li>
+<li>
+<p>tmpwatch</p>
+<p>用于删除不必要的临时文件，可以设置文件超期时间，单位以小时计算；</p>
+</li>
+<li>
+<p>touch</p>
+<p>创建空白文件，修改文件的访问时间和修改时间；</p>
+</li>
+<li>
+<p>umask</p>
+<p>初始创建目录或者文件的时候，赋予它们的权限；</p>
+</li>
+<li>
+<p>which</p>
+<p>查看可执行文件的位置；</p>
+</li>
+<li>
+<p>whereis</p>
+<p>查看文件的位置；</p>
 </li>
 </ol>
 <h3 id="2">2.磁盘管理</h3>
