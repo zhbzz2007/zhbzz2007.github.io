@@ -627,9 +627,45 @@ date: 2016-06-07 17:12
 
 ###6.网络通讯 ###
 
-1. ping
+1. apachectl
 
-    检测网络连通。
+    用于控制Apache HTTP服务器的程序，apachectl是Apache超文本传输协议服务器的前端程序，其设计意图是帮助管理员控制Apache httpd后台的功能；
+
+2. arpwatch
+
+    监听网络上ARP的记录，ARP(Address Resolution Protocol)是用来解析IP与网络装置硬件地址的协议，arpwatch可监听区域网络中的ARP数据包并记录，同时将监听的变化通过E-mail来报告；
+
+3. dip
+
+    用于IP拨号连接，dip可控制调制解调器，以拨号IP的方式建立对外的双向连接；
+
+4. getty
+
+    是Unix类操作系统启动时必须的三个步骤之一，用来开启终端，进行终端的初始化，设置终端，getty命令设置和管理终端线路和端口，getty命令由init命令来运行，getty命令与终端状态管理员程序相连接，终端状态管理员程序提供了终端控制和登录的复合功能；
+
+5. mingetty
+
+    精简版的getty，适用于本机上的登入程序；
+
+6. uux
+
+    在远端的UUCP主机上执行命令，uux可在远端的UUCP主机上执行命令或是执行本机上的命令，但在执行时会使用远端电脑的文件；
+
+7. telnet
+
+    远端登入，执行telnet命令开启终端机阶段作业，并登入远端主机；
+
+8. uucp
+
+    显示UUCP记录文件中的记录；
+
+9. uustat
+
+    用于显示UUCP目前的状况，执行UUCP与uux指令后，会先将工作送到队列，再由uucico来执行工作，uustat可显示，删除或启动队列中等待执行的工作；
+
+10. ppp-off
+
+    用于关闭ppp连线，这时Slackware发行版内附的程序，让用于切断ppp的网络连线；
 
 ###7.系统管理 ###
 
