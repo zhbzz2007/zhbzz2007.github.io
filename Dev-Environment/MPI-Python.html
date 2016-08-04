@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>MPI Python环境搭建 - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Dev-Environment">Dev-Environment</a>&nbsp;»&nbsp;MPI Python环境搭建</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">MPI Python环境搭建</div>
+  <div id="content">
+  <p>本博客主要用于介绍MPI Python环境搭建；</p>
+<h2 id="0python">0.Python安装</h2>
+<h2 id="1openmpi">1.openmpi安装</h2>
+<p>shell中执行，</p>
+<div class="hlcode"><pre><span class="n">wget</span> <span class="n">http</span><span class="o">:</span><span class="c1">//www.open-mpi.org/software/ompi/v1.4/downloads/openmpi-1.4.1.tar.gz</span>
+<span class="n">tar</span> <span class="n">xzvf</span> <span class="n">openmpi</span><span class="o">-</span><span class="mf">1.4.1</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="n">mkdir</span> <span class="n">openmpi</span>
+<span class="p">.</span><span class="o">/</span><span class="n">configure</span> <span class="o">--</span><span class="n">prefix</span> <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">zhb</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">openmpi</span>
+<span class="n">cd</span> <span class="n">openmpi</span><span class="o">-</span><span class="mf">1.4.1</span>
+<span class="n">make</span> <span class="n">all</span> <span class="n">install</span>
+</pre></div>
+
+
+<p>然后把bin目录和lib目录添加到环境变量里面，</p>
+<div class="hlcode"><pre><span class="n">sudo</span> <span class="n">vim</span> <span class="p">.</span><span class="n">profile</span>
+</pre></div>
+
+
+<p>文本中输入，</p>
+<div class="hlcode"><pre><span class="n">export</span> <span class="n">PATH</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">zhb</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">openmpi</span><span class="o">/</span><span class="n">bin</span><span class="o">:</span><span class="err">$</span><span class="n">PATH</span>
+<span class="n">export</span> <span class="n">LD_LIBRARY</span><span class="o">=/</span><span class="n">home</span><span class="o">/</span><span class="n">zhb</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">openmpi</span><span class="o">/</span><span class="n">lib</span><span class="o">:</span><span class="err">$</span><span class="n">LD_LIBRARY</span>
+</pre></div>
+
+
+<p>然后执行，</p>
+<div class="hlcode"><pre><span class="n">source</span> <span class="p">.</span><span class="n">profile</span>
+</pre></div>
+
+
+<h2 id="2mpi4py">2.安装mpi4py</h2>
+<p>在<a href="https://pypi.python.org/pypi/mpi4py">mpi4py</a>网址下载mpi4py源码，然后在shell中执行，</p>
+<div class="hlcode"><pre><span class="n">tar</span> <span class="o">-</span><span class="n">xgvf</span> <span class="n">mpi4py</span><span class="o">-</span><span class="mf">2.0.0</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<span class="n">cd</span> <span class="n">mpi4py</span><span class="o">-</span><span class="mf">2.0.0</span>
+<span class="n">vim</span> <span class="n">mpi</span><span class="p">.</span><span class="n">cfg</span>
+</pre></div>
+
+
+<p>在[openmpi]下面，修改为刚才已经安装好的openmpi的目录；</p>
+<div class="hlcode"><pre><span class="cp"># Open MPI example</span>
+<span class="cp"># ----------------</span>
+<span class="p">[</span><span class="n">openmpi</span><span class="p">]</span>
+<span class="cp">#mpi_dir              = /home/devel/mpi/openmpi-1.8.6</span>
+<span class="n">mpi_dir</span>              <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">zhb</span><span class="o">/</span><span class="n">install</span><span class="o">/</span><span class="n">openmpi</span><span class="o">/</span>
+<span class="n">mpicc</span>                <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">mpi_dir</span><span class="p">)</span><span class="n">s</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mpicc</span>
+<span class="n">mpicxx</span>               <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">mpi_dir</span><span class="p">)</span><span class="n">s</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mpicxx</span>
+<span class="cp">#include_dirs         = %(mpi_dir)s/include</span>
+<span class="cp">#libraries            = mpi</span>
+<span class="n">library_dirs</span>         <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">mpi_dir</span><span class="p">)</span><span class="n">s</span><span class="o">/</span><span class="n">lib</span>
+<span class="n">runtime_library_dirs</span> <span class="o">=</span> <span class="o">%</span><span class="p">(</span><span class="n">library_dirs</span><span class="p">)</span><span class="n">s</span>
+</pre></div>
+
+
+<p>然后在shell中执行，</p>
+<div class="hlcode"><pre><span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+
+
+<h2 id="3mpi4py">3.测试mpi4py</h2>
+<p>打开python，输入，</p>
+<div class="hlcode"><pre> <span class="n">import</span> <span class="n">mpi4py</span><span class="p">.</span><span class="n">MPI</span> <span class="n">as</span> <span class="n">MPI</span>
+ <span class="n">dir</span><span class="p">(</span><span class="n">MPI</span><span class="p">)</span>
+</pre></div>
+
+
+<p>就可以看到mpi4py.MPI的各个方法。</p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
