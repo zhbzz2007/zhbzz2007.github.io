@@ -67,6 +67,14 @@ shell中执行，
 
 就可以看到mpi4py.MPI的各个方法。
 
+**3.1.执行mpi程序**
+
+在shell中输入，
+
+    mpirun -np 5 python test.py
+
+其中，test.py是已经编写好的mpi程序；
+
 ## 4.Windows系统下安装mpi4py ##
 
 以上操作步骤为Ubuntu 14.04 64bit系统下搭建mpi4py，以下步骤将介绍Windows系统下搭建mpi4py。
@@ -87,3 +95,11 @@ shell中执行，
 **3.测试mpi4py**
 
 按照步骤3测试，即可；
+
+**3.1执行mpi程序**
+
+在cmd中输入，
+
+    mpiexec -n 5 python test.py
+
+其中，test.py是已经编写好的mpi程序；
