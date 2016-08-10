@@ -85,6 +85,34 @@
 
 
 <p>就可以看到mpi4py.MPI的各个方法。</p>
+<p><strong>3.1.执行mpi程序</strong></p>
+<p>在shell中输入，</p>
+<div class="hlcode"><pre><span class="n">mpirun</span> <span class="o">-</span><span class="n">np</span> <span class="mi">5</span> <span class="n">python</span> <span class="n">test</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+
+
+<p>其中，test.py是已经编写好的mpi程序；</p>
+<h2 id="4windowsmpi4py">4.Windows系统下安装mpi4py</h2>
+<p>以上操作步骤为Ubuntu 14.04 64bit系统下搭建mpi4py，以下步骤将介绍Windows系统下搭建mpi4py。</p>
+<p><strong>1.安装Microsoft MPI v6</strong></p>
+<p>在<a href="https://www.microsoft.com/en-us/download/confirmation.aspx?id=47259"><strong>Microsoft MPI</strong></a>
+下载msmpisdk.msi和MSMpiSetup.exe，然后安装，使用默认的安装路径；</p>
+<p><strong>2.安装mpi4py</strong></p>
+<p>在<a href="https://pypi.python.org/pypi/mpi4py"><strong>mpi4py</strong></a>网址下载mpi4py wheel文件，我的Python环境是64bit，因此下载的是mpi4py-2.0.0-cp27-none-win_amd64.whl；</p>
+<p>在cmd中执行，</p>
+<div class="hlcode"><pre><span class="n">pip</span> <span class="n">install</span> <span class="n">mpi4py</span><span class="o">-</span><span class="mf">2.0.0</span><span class="o">-</span><span class="n">cp27</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="n">win_amd64</span><span class="p">.</span><span class="n">whl</span>
+</pre></div>
+
+
+<p><strong>3.测试mpi4py</strong></p>
+<p>按照步骤3测试，即可；</p>
+<p><strong>3.1执行mpi程序</strong></p>
+<p>在cmd中输入，</p>
+<div class="hlcode"><pre><span class="n">mpiexec</span> <span class="o">-</span><span class="n">n</span> <span class="mi">5</span> <span class="n">python</span> <span class="n">test</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+
+
+<p>其中，test.py是已经编写好的mpi程序；</p>
 </div>
 
         </div>
