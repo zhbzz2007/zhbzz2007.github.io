@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>MPI Windows集群环境搭建 - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Dev-Environment">Dev-Environment</a>&nbsp;»&nbsp;MPI Windows集群环境搭建</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">MPI Windows集群环境搭建</div>
+  <div id="content">
+  <h2 id="1-net-framework-35">1 .Net FrameWork 3.5 安装</h2>
+<p>Windows8及以上系统，默认不安装.Net FrameWork 3.5 and 2.0，而MPICH2需要.Net FrameWork 2.0，由于服务器没有联网，因此无法在线安装，可以通过系统自带的dism提取系统镜像中的内容；</p>
+<p>1.系统镜像如下所示，</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815152508281-257861931.png" /></p>
+<p>2.以管理员身份运行cmd，在shell中输入以下内容，注意修改source即可，本机为E盘；</p>
+<div class="hlcode"><pre><span class="n">dism</span><span class="p">.</span><span class="n">exe</span> <span class="o">/</span><span class="n">online</span> <span class="o">/</span><span class="n">enable</span><span class="o">-</span><span class="n">feature</span> <span class="o">/</span><span class="n">featurename</span><span class="o">:</span><span class="n">NetFX3</span> <span class="o">/</span><span class="n">Source</span><span class="o">:</span><span class="n">E</span><span class="o">:</span><span class="err">\</span><span class="n">sources</span><span class="err">\</span><span class="n">sxs</span>
+</pre></div>
+
+
+<p>上述命令执行后可能会失败，如图所示，</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815152731281-868017276.png" /></p>
+<p>使用/enable-feature /all即可，</p>
+<div class="hlcode"><pre><span class="n">dism</span><span class="p">.</span><span class="n">exe</span> <span class="o">/</span><span class="n">online</span> <span class="o">/</span><span class="n">enable</span><span class="o">-</span><span class="n">feature</span> <span class="o">/</span><span class="n">all</span> <span class="o">/</span><span class="n">featurename</span><span class="o">:</span><span class="n">NetFX3</span> <span class="o">/</span><span class="n">Source</span><span class="o">:</span><span class="n">E</span><span class="o">:</span><span class="err">\</span><span class="n">sources</span><span class="err">\</span><span class="n">sxs</span>
+</pre></div>
+
+
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815152736046-1142029200.png" /></p>
+<p>.Net FrameWork 3.5 and 2.0安装成功；</p>
+<p>Win + Q中搜索"启用或关闭Windows功能"，然后在"功能"中可以看见.Net FrameWork 3.5功能已经安装ok，其中包括.Net 2.0和3.0；</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815153126921-1596167345.png" /></p>
+<h2 id="2-mpich">2 安装MPICH</h2>
+<p>在每台机器上安装好mpi的安装包，安装的路径任意选择，安装过程中在使用者那选择Everyone，将MPICH2的bin目录添加进系统环境变量Path中；</p>
+<p>检查计算机的服务里是否有MPICH2 Process Manager,Argonne National Lab这项服务，具体步骤：右击任务栏-&gt;启动任务管理器-&gt;点到服务那一列-&gt;点击右下角服务按钮，就会出现服务列表，从上面找看看有没有这个服务，如果没有则运行下面的命令；</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815153825000-1374736988.png" /></p>
+<p>Win + Q搜索"cmd"，然后以管理员身份运行cmd，进入MPICH2的bin目录，在shell中输入，</p>
+<div class="hlcode"><pre><span class="n">smpd</span> <span class="o">-</span><span class="n">install</span> <span class="o">-</span><span class="n">phrase</span> <span class="n">behappy</span><span class="p">(</span><span class="err">为安装时输入的</span><span class="n">phrase</span><span class="p">)</span>
+</pre></div>
+
+
+<h2 id="3">3 添加用户账户</h2>
+<p>为了使计算机集群能使用MPI，应该给每个安装了MPI的计算机添加一个相同的账户，账户密码也必须相同，账户要求是管理员身份。这里的账户为mpi，密码可以随便设置；</p>
+<h2 id="4">4 注册账户</h2>
+<p>运行wmpiregister.exe
+，将mpi账户和密码添加进去，注册，然后点击确定；</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815154406265-687613405.png" /></p>
+<h2 id="5">5 配置</h2>
+<p>测试前需要在每台计算机上常见一个路径相同的文件下，比如在F盘根目录下创建一个mpi的文件夹，将编译成功需要执行的.exe文件放入该目录；</p>
+<p>运行wmpiconfig.exe，注意将各计算机的防火墙关掉，个计算机在同一个项目组内，这里我使用的计算机都是内网机器，都在WORKGROUP工作组内；</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815154942531-874358996.png" /></p>
+<h2 id="6">6 测试</h2>
+<p><strong>1.单机单核版</strong></p>
+<p>在本机直接运行cpi.exe，输入一个比较大的数值，80000000，如下</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815155206765-1334655303.png" /></p>
+<p><strong>2.单机多核版</strong></p>
+<p>运行wmpiexec.exe，处理器选择2,然后执行，如下，</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815155548843-543875995.png" /></p>
+<p>执行结果如下，</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815155554250-1408894194.png" /></p>
+<p><strong>3.集群版</strong></p>
+<p>在cmd中输入如下命令，</p>
+<div class="hlcode"><pre><span class="n">mpiexec</span> <span class="o">-</span><span class="n">hosts</span> <span class="mi">3</span> <span class="n">ip1</span> <span class="n">ip2</span> <span class="n">ip3</span> <span class="n">F</span><span class="o">:/</span><span class="n">mpi</span><span class="o">/</span><span class="n">cpi</span><span class="p">.</span><span class="n">exe</span>
+</pre></div>
+
+
+<p>执行结果如下，2个计算机节点，可以看到与使用双核的效果差不多；</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815155938375-953737032.png" /></p>
+<p>使用3个计算机节点，使用的时间是单机单核的1/3，可以说集群中计算机节点越多，处理越快，效率几乎是线性的；</p>
+<p><img alt="" src="http://images2015.cnblogs.com/blog/668850/201608/668850-20160815155944093-98642656.png" /></p>
+<h2 id="7">7 参考链接</h2>
+<p>1.<a href="http://www.cnblogs.com/Romi/archive/2012/05/28/2522401.html">Windows下MPI的环境搭建及机群测试</a></p>
+<p>2.<a href="http://www.cnblogs.com/jcf94/p/4157994.html">Win8/8.1 下映像管理和恢复环境的配置</a></p>
+<p>3.<a href="http://www.cnblogs.com/taoweiji/p/3659892.html">Windows 8系统默认开启的.Net Framework版本是4.0，而部分用户可能需要使用到3.5或以下版本，简单添加方法</a></p>
+<p>4.<a href="http://blog.sina.cn/dpool/blog/s/blog_8af243c30101lnma.html">windows系统lammps安装MPICH2的问题</a></p>
+<p>5.<a href="http://jingyan.baidu.com/article/f0062228dc4fa6fbd3f0c80f.html">Win7/8下提示OpenSCManager failed 拒绝访问</a></p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
