@@ -12,7 +12,7 @@ date: 2016-06-02 22:46
 
 ## 1.安装tensorflow ##
 
-github上下载已经编译好的.whl文件。
+[github](https://github.com/tensorflow/tensorflow)上下载已经编译好的.whl文件。
 
 ![](http://images2015.cnblogs.com/blog/668850/201605/668850-20160528220012022-1342690038.png)
 

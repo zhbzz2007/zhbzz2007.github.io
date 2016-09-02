@@ -66,7 +66,7 @@ date: 2016-06-22 23:04
 添加如下配置，
 
     export SCALA_HOME=$HOME/install/scala-2.11.8
-    export PATH=$PATH:SCALA_HOME/bin:$HOME/bin
+    export PATH=$PATH:$SCALA_HOME/bin:$HOME/bin
 
 然后输入scala，进入scala命令行说明scala安装正确，如下图所示。
 
