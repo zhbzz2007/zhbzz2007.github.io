@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <link rel="Stylesheet" type="text/css" href="/static/css/style.css">
+        <link rel="Stylesheet" type="text/css" href="/static/css/tango.css">
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+        <title>豆瓣工程师董明伟关于Python的一些分享 - 老顽童的wiki</title>
+        <meta name="keywords" content="wiki, python, machine learning"/>
+        <meta name="description" content="wiki-zhb is a wiki for zhbzz2007."/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+
+    <body>
+        <div id="container">
+            
+<div id="header">
+  <div id="post-nav"><a href="/">Home</a>&nbsp;»&nbsp;<a href="/#Python">Python</a>&nbsp;»&nbsp;豆瓣工程师董明伟关于Python的一些分享</div>
+</div>
+<div class="clearfix"></div>
+<div id="title">豆瓣工程师董明伟关于Python的一些分享</div>
+  <div id="content">
+  <p>董明伟是豆瓣资深工程师，&lt;<Python Web开发实战>&gt;一书的作者。</p>
+<p>本文是董明伟老师在Pyhthon交流群内关于一些问题的回答，大致梳理处理，以便后续继续学习。</p>
+<h2 id="1python">1.Python如何进阶</h2>
+<p>进阶就是一点点的积累，首先不要舍不得花时间，你要舍得花时间。个人很推荐读优秀的开源项目源码以及自己「造轮子」这2种。</p>
+<p>1.这个过程中不断的反思和积累各种经验，有了问题就要google、stackoverflow和github上去找，先参考别人的，想想和自己的方案对比，究竟好在哪里。</p>
+<p>2.是看别人的博客，多看书。但是要掌握一些过滤不好信息的技巧。</p>
+<p>3.是去看python标准库的代码。</p>
+<p>4.是有勇气给开源社区提一些issue或者pr。</p>
+<p>董老师在<a href="https://zhuanlan.zhihu.com/python-cn">知乎专栏</a>上也有提到订阅列表，大家有空可以去看看。</p>
+<p>还订阅了python社区的一些邮件列表，说实话很烦。</p>
+<p>但是有时候你们看到一些社区开发者讨论，甚至是激烈讨论。我喜欢静静的看他们，学习他们对一些事情的看法，和思考的角度。</p>
+<p><strong>Python初级工程师：</strong> 基本就是够工作，那买的python书看2-3本，里面的50%，熟悉Python常用的模块，就可以工作了。</p>
+<p><strong>Python中级工程师：</strong> 就是愿意花时间让代码写的好一些，比如今天学习了元类，用上。明天觉得类装饰器不错，也用上，不考虑用的恰不恰当，基本Python用到的东西都「熟悉」。</p>
+<p><strong>Python高级工程师：</strong> 就是明确的知道什么时候该用什么，什么场景该用什么，怎么用，恰到好处。</p>
+<p>造轮子，主要有2个原因，1是现在的东西不满足你的需要，或者你不喜欢；2是你就是为了学习想造。</p>
+<p>是因为我们组的用法一直是 react+redux，但是我不喜欢redux,正好听人推荐，想用用mobx，通过做项目真的深入了解它。</p>
+<p>「造」，其实不是抄袭，比如知乎，经常用，大概也就知道它是什么了，但是实际真的做出来很难。你要解决的问题可能千个，真的把它造出来了，对你技术提高，对web开发的理解有非常大的提升。</p>
+<p>比如，你可以用go做个豆瓣。</p>
+<h2 id="2">2.代码审查和写作</h2>
+<p>代码质量可以看 <a href="https://zhuanlan.zhihu.com/p/22338225?refer=python-cn">保证代码质量二三事</a>。</p>
+<p>前提是老大挺，同事接受。否则我更建议自己管好自己。</p>
+<p>我之前因为代码审查太严厉，被点名批评。</p>
+<p>今天说几点，</p>
+<p>1是一定要按照PEP8来，团队可以有妥协，大家同意即可；</p>
+<p>2是尽量让代码写的Pythonic；</p>
+<p>接着你有兴趣，你得用各种方式影响别人、说服别人，这个是非技术能力。需要注意表达的方式方法，比如不要指点，而是在咨询，有时候气氛不好了，发点搞笑图片。</p>
+<p>自己的话，本地可以试试pre-commit，可以让你的编辑器支持代码自动执行flake8。</p>
+<h2 id="3python">3.Python学到什么程度可以去豆瓣面试</h2>
+<p>豆瓣面试和其他公司的应该区别不大，就是对python有一定经验，有些可以衡量的项目，比如放在github上，还是挺涨分的。</p>
+<p>其次是看面试官的风格啦，看你遇到那个人。</p>
+<p>去之前，让豆瓣的面试官最好听过你。</p>
+<p>算法还是要准备下的。</p>
+<p>面试之前，一定要先了解豆瓣再来，比如豆瓣阅读和豆瓣读书不分，比如豆瓣都在用什么技术，别准备哪些豆瓣不用的，可以集中火力，事半功倍。</p>
+<p><strong>除了Python，豆瓣正在用的有哪些技术栈？</strong> golang，前端就是react，其他的基本都是Python，现在主流这三种，之前有过c++ java这些，现在应该都不咋维护了，有c++ libmc，但是都是很小的。</p>
+<p><strong>前端开发和web开发一样吗？</strong> 在豆瓣不一样，但是是重合的，比如我们组内的前端工作都是我们组的后端工程师消化。</p>
+<p><strong>豆瓣公司招人吗？</strong> 你会发现很多公司常年招聘，其实不一定缺人，只是做储备。</p>
+<p><strong>Python wdb开发方面，框架如何选择？</strong> django更偏向于企业级，其实，pyramid更合适。我们组现在有一些产品就是使用pyramid做的。我挺喜欢。但是不推荐，因为对新手不咋友好。django还是flask, 我没法建议。但是新人学习建议flask. 学的差不多了，如果工作中有用django更好，没有的话自己学些，自己给自己个答案。但是这些都离找工作还挺远的。框架只是一个工具而已。就算django,用一个月的时间你也能学个差不多，关键还是使用Python的熟悉程度，还有对web开发工作的经验。</p>
+<p>大家多看requests（作者是董老师心中的大神）和flask（作者次之）。</p>
+<p>celery和fabric的作者也很厉害。</p>
+<p><strong>豆瓣有openstack的项目吗？</strong> 没有openstack的项目，豆瓣是一个喜欢造轮子的公司，里面有大量的工具和库，然而它们都不开源，基本是自己玩，但是有些项目，真的挺好玩的，甚至于在我来豆瓣之后感慨“还能这么玩”。</p>
+<p>豆瓣有很多orm,如mongoengine sqlaichemy，这些都不用。</p>
+<p><strong>推荐一些豆瓣和自己个人最常用的库？</strong> 豆瓣用的最多的是mako，对于flask的模板库，豆瓣没有人用jinja2。</p>
+<p><strong>面试注意事项</strong> 请参考<a href="www.zhihu.com/question/33398583/answer/122435737">如何面试Python后端工程师？</a>。</p>
+</div>
+
+        </div>
+        <div id="footer">
+            <span>
+                Copyright © 2016 zhbzz2007.
+                Powered by <a href="http://simiki.org/" target="_blank">Simiki</a>.
+            </span>
+        </div>
+        
+    </body>
+</html>
